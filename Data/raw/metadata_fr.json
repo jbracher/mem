@@ -1,0 +1,89 @@
+{
+	"profile": "tabular-data-resource",
+	"name": "sentiweb-incidence-{$id}",
+	"path": "http://www.sentiweb.fr/datasets/{$file}",
+	"title": "Sentiweb Incidence Data file",
+	"description": "",
+	"format": "csv",
+	"mediatype": "text/csv",
+	"encoding": "iso-8859-1",
+	"schema": {
+		"fields": [
+			{
+				"name": "week",
+				"type": "integer",
+				"description": "ISO8601 Yearweek number as numeric (year*100 + week nubmer)"
+			},
+			{
+				"name": "geo_insee",
+				"type": "string",
+				"title": "Geographic area",
+				"description": "Identifier of the geographic area, from INSEE https://www.insee.fr"
+			},
+			{
+				"name": "geo_name",
+				"type": "string",
+				"title": "Geographic area label",
+				"description": "Geographic label of the area, corresponding to INSEE code. This label is not an id and is only provided for human reading"
+			},
+			{
+				"name": "indicator",
+				"type": "integer",
+				"title": "Indicator id",
+				"description": "Unique identifier of the indicator, see metadata document https://www.sentiweb.fr/meta.json"
+			},
+			{
+				"name": "inc",
+				"type": "integer",
+				"title": "Estimated incidence",
+				"description": "Estimated incidence value for the time step, in the geographic level"
+			},
+			{
+				"name": "inc_low",
+				"type": "integer",
+				"title": "Lower bound of Estimated incidence 95% CI",
+				"description": "Lower bound of the estimated incidence 95% Confidence Interval"
+			},
+			{
+				"name": "inc_up",
+				"type": "integer",
+				"title": "Upper bound of Estimated incidence 95% CI",
+				"description": "Upper bound of the estimated incidence 95% Confidence Interval"
+			},
+			{
+				"name": "inc100",
+				"type": "integer",
+				"title": "Estimated rate incidence",
+				"description": "Estimated rate incidence per 100,000 inhabitants"
+			},
+			{
+				"name": "inc100_low",
+				"type": "integer",
+				"title": "Lower bound of estimated rate incidence 95% CI",
+				"description": "Lower bound of the estimated incidence 95% Confidence Interval"
+			},
+			{
+				"name": "inc100_up",
+				"type": "integer",
+				"title": "Upper bound of rate incidence 95% CI",
+				"description": "Upper bound of the estimated rate incidence 95% Confidence Interval"
+			}
+		],
+		"primaryKey": [
+			"week",
+			"indicator",
+			"geo_insee"
+		],
+		"missingValues": ["-"]
+	},
+	"dialect": {
+		"csvddfVersion": "1.0",
+		"delimiter": ",",
+		"doubleQuote": false,
+		"lineTerminator": "\r\n",
+		"quoteChar": "\"",
+		"skipInitialSpace": true,
+		"header": true,
+		"commentChar": "#"
+	}
+}
