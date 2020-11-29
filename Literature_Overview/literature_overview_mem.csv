@@ -1,39 +1,26 @@
 authors	publication_year	region	disease	n_seasons_fit	page_n_seasons	years_of_data	page_years_of_data	threshold_levels	page_threshold_levels
 AbdElGawad et al.	2020	Egypt	SARI, ILI	6		2010-2016	430	40, 90, 97.5	431
-Bangert et al.	2017	Spain	ILI	8, 9 or 10		2005-2014	716	40, 90, 97.5	717
+Bangert et al.	2017	Spain	ILI	8 to 10		2005-2014	716	40, 90, 97.5	717
 Basile et al.	2018	Catalonia	ILI	5		2010-2015	4		4
 Basile et al.	2019	Catalonia	ILI	12		2005-2017	55		
 Benedetti et al.	2019	Norway	influenza	9		2006-2015	91	standard r-package	
-Biggerstaff et al.	2017	USA	ILI			2003-2015	1040	50, 90, 98	1040
-Bouggerra et al.	2020	Tunisia	ILI			2009-2018	507	50, 90, 95	508
-Dahlgren et al.	2018	USA	influenza			2010-2015	466	50, 90, 98	466
-Dahlgren et al.	2019	USA	influenza			2010-2016	24	50, 90, 98	24
-Drumright et al.	2015	UK	ILI			2008-2013	1		
-Elhakim et al.	2019	Egypt	SARI			2013-2014	525	standard r-package	
-Green et al.	2014	England	influenza			2012	295		
-Green et al.	2015	UK	ILI			2000-2012	3	standard r-package	4
-Grilic et al.	2020	Slovenia	RSV			2008-2017	1	40, 90, 97.5	3
-Grottenberg et al.	2018	Norway	flu			2016	234		
-Harcourt et al.	2019	England	ILI			2013-2017	3	standard r-package	2
-Marques-Toldeo et al.	2019	Brazil	dengue			2012-2017	3		
-Michiels et al.	2017	Belgium	ILI			2003-2013	4		
-Mizzi 	2019	Brazil	dengue			2012-2016	27		
-Murray et al.	2018	Scotland	ILI			2010-2017	2		
-Nisar et al.	2020	Pakistan	ILI			2008-2017	2	40, 90, 97.5	6
-Pascoa et al.	2018	Portugal	ILI			2012-2017	4	standard r-package	
-Pes�l� et al.	2019	Finland	influenza			2011-2017	364		
-Rakocevic et al.	2019	Montenegro	ILI			2010-2017	1	40, 90, 97.5	5
-Redondo-Bravo et al.	2020	Spain	ILI			2001-2018	4	40, 90, 97.5	3
-Rguig et al.	2020	Morocco	ILI			2005-2017	2	20, 90, 95	10
-Souty et al.	2018	France	ILI			1995-2011			
-Sullivan et al.	2019	Australia, New Zealand, Chile, South Africa	ILI			2013-2019	3	standard r-package	3
-Tan et al.	2020	China	influenza			2010-2018	1		
-Torner et al.	2019	Catalonia	influenza			2010-2018	1		
-Vega et al.	2012	Europe	ILI			at least five seasons	547	50, 90, 95	548
-Vega et al.	2015	Europe 	ILI			1996-2014	234	40, 90, 97.5	235
-Vette et al.	2018	Australia	ILI			2012-2017	1	40, 90, 99	559
-Vos et al.	2019	Netherlands	RSV			2005-2016	2	40, 90, 97.5	5
-Wagner et al.	2018	England	ILI			2009-2015	3		
-Walker et al.	2020	New Zealand	influenza			2012-2016	184		
-WHO PISA	2017		influenza					40, 90, 97.5	10
-Yang et al.	2019	Taiwan	ILI			2014-2017	5		
+Biggerstaff et al.	2017	USA	ILI	11	Abstract	2003-2015	1040	50, 90, 98	1040
+Bouggerra et al.	2020	Tunisia	ILI	9	Abstract	2009-2018	507	50, 90, 95	508
+Dahlgren et al.	2018	USA	influenza (oseltamivir prescriptions)	5	466	2010-2015	466	50, 90, 98	466
+Dahlgren et al.	2019	USA	influenza (oseltamivir prescriptions)	6	24	2010-2016	24	50, 90, 98	24
+Elhakim et al.	2019	Egypt	SARI	3		2013-2014	525	standard r-package	
+Green et al.	2015	UK	ILI	up to 10		2000-2012	3	standard r-package	4
+Grilic et al.	2020	Slovenia	RSV	10		2008-2017	1	40, 90, 97.5	3
+Harcourt et al.	2019	England	influenza, RSV	4 to 6		2013-2017	3	standard r-package	2
+Murray et al.	2018	Scotland	influenza	7		2010-2017	2		
+Nisar et al.	2020	Pakistan	ILI	10		2008-2017	2	40, 90, 97.5	6
+Pascoa et al.	2018	Portugal	ILI	5		2012-2017	4	standard r-package	
+Pes�l� et al.	2019	Finland	influenza	5		2011-2017	364		
+Rakocevic et al.	2019	Montenegro	ILI	7		2010-2017	1	40, 90, 97.5	5
+Redondo-Bravo et al.	2020	Spain	ILI	17		2001-2018	4	40, 90, 97.5	3
+Rguig et al.	2020	Morocco	ILI	11	3	2005-2017	2	20, 90, 95	10
+Sullivan et al.	2019	Australia, New Zealand, Chile, South Africa	ILI	6		2013-2019	3	standard r-package	3
+Torner et al.	2019	Catalonia	influenza	7		2010-2018	1		
+Vette et al.	2018	Australia	influenza/ILI	5		2012-2017	1	40, 90, 99	559
+Vos et al.	2019	Netherlands	RSV	12		2005-2016	2	40, 90, 97.5	5
+Wagner et al.	2018	England	ILI	6		2009-2015	3		
