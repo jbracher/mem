@@ -6,7 +6,7 @@
 \SweaveOpts{concordance=TRUE}
 
 \title{A permutation-based comparison of ILI intensity thresholds from the moving epidemic and WHO methods}
-\author{Johannes Bracher}
+\author{Johannes Bracher, Jonas Littek}
 
 \maketitle
 
@@ -19,7 +19,10 @@
 
 \section{A brief review of recent applications}
 
-Cite Benedetti who use it as a "gold standard". Mention Green GB who compare to percentile method. Vos mention fixed criterion model -- what ist that?
+Cite Benedetti who use it as a "gold standard". Mention Green GB who compare to percentile method. Vos mention fixed criterion model -- what is that?
+
+
+\textbf{add table with Jonas' literature review here}
 
 \section{Simulaton study}
 
@@ -27,11 +30,18 @@ Cite Benedetti who use it as a "gold standard". Mention Green GB who compare to 
 
 \subsection{Data}
 
+\includegraphics{figure/plot_data.pdf}
+
 \subsection{Used software}
 
 MEM version xxx, R software
 
 \subsection{Results}
+
+\includegraphics[page=1]{figure/plot_results.pdf}
+
+\includegraphics[page=2]{figure/plot_results.pdf}
+
 
 \section{Discussion}
 
