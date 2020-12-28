@@ -3,6 +3,9 @@
 \usepackage{graphicx}
 \usepackage{natbib}
 \usepackage{hyperref}
+\usepackage{todonotes}
+\usepackage{booktabs}
+
 
 
 \begin{document}
@@ -21,25 +24,126 @@
 Following the 2009 influenza H1N1 pandemic, the need for a rapid assessment tool for influenza intensity was recognized. In a report, the Review Committee on the Functioning of the
 International Health Regulations (2005) and on Pandemic Influenza (H1N1) 2009 recommended that member states apply and evaluate their methods for severity assessment every year, thus improving their pandemic preparedness \citep[118]{WHO2011}. In its subsequent Pandemic Infuenza Severity Assessment (PISA) guide (\citeyear{WHO2017}), two specific statistical methods are recommended to determine influenza intensity thresholds. Firstly, the so-called \textit{WHO method}, already described in a previous document \citep{WHO2014} and in more detail in the PISA guide; and secondly, the \textit{moving epidemic method} (MEM) \citep{Vega2013, Vega2015} which is also recommended by the European Centre for Disease Prevention and Control (e.g.\ \citealt{ECDC2017}).
 
-In particular the MEM approach has in the meantime been adopted by numerous public health agencies countries in recent years and seems to deliver practically useful thresholds. The statistical properties of the MEM and WHO methods, however, have not yet been studied in detail. While it seems challenging to obtain strong mathematical results on their behaviour, we argue that simulation experiments can improve our understanding and intuition of the consequences of different implementation choices. We here provide such a simulation study, which in order to ensure a close link to real influenza patterns, is based on permutations of historical surveillance data.
+In particular the MEM approach has in the meantime been adopted by numerous national public health agencies and seems to deliver practically useful thresholds. The statistical properties of the MEM and WHO methods, however, have not yet been studied in detail. While it seems challenging to obtain strong mathematical results on their behaviour, we argue that simulation experiments can improve our understanding and intuition of the consequences of different implementation choices. We here provide such a simulation study, which in order to ensure a close link to real influenza patterns, is based on permutations of historical surveillance data.
 
 The article is structured as follows. Section \ref{sec:definitions} provides concise definitions of the MEM and WHO methods, highlighting two important differences between these conceptually similar approaches. Section \ref{sec:recent_applications} consists of an overview of published applications of the MEM and WHO methods. In Section \ref{sec:simulation} we describe our simulation approach and the results based on historical data from France, Spain, Switzerland and the United States. Section \ref{sec:discussion} concludes with a discussion.
 
 \section{Definition of the moving epidemic and WHO methods}
 \label{sec:definitions}
 
-\section{A brief review of recent applications}
+In the following we focus on the construction of thresholds  for peak intensity, framing the MEM and WHO methods as different special cases of a more general approach. Details on the construction of baseline thresholds from pre-season observations are omitted. We assume that thresholds are to be constructed from data from $n$ past seasons and subsequently be applied to the current ($n + 1$-th) season. \cite{Vega2015} recommend to use $5 \leq n \leq 10$ seasons to ensure a sufficiently large, but recent data basis. Thresholds for for a given intensity measure $X$ are then obtained via the following steps:
+
+\begin{enumerate}
+\item For each historical season order all observations, denoting the $i$-th largest observation from season $j$ by $X^{(i)}_j$.
+\item Select the $K$ largest observations from each of the $n$ past seasons to construct a reference set $\mathcal{X} = \{X_j^{(i)}; i = 1, \dots, n; j = 1, \dots, K\}$.
+\item Apply an (inversible) transformation $Y_j^{(i)} = f(X_j^{(i)})$ to all members of the reference set to obtain a reference set $\mathcal{Y}$ of transformed past observations.
+\item Assume that the transformed values in $\mathcal{Y}$ come from a normal distribution and compute its estimated mean $\hat\mu$ and standard deviation $\hat \sigma$.
+\item Define intensity thresholds on the transformed scale as quantiles of this normal distribution. A common choice for both methods \citep{WHO2017}, also implemented as the default in the \texttt{R} package \texttt{mem} \citep{Lozano2020} is
+\begin{itemize}
+\item the 40th percentile $q_{Y, 0.4} = \hat\mu - 0.25 \hat\sigma$ as the threshold between low and medium intensity;
+\item the 90th percentile $q_{Y, 0.9} = \hat\mu + 1.28 \hat\sigma$ as the threshold between medium and high intensity;
+\item the 97.5th percentile $q_{Y, 0.975} = \hat\mu + 1.96\hat\sigma$ as the threshold between high and very high intensity.
+\end{itemize}
+\item Obtain thresholds on the original scale by applying the inverse transformation $q_{0.4} = f^{-1}(q_{Y, 0.4})$, $q_{0.9} = f^{-1}(q_{Y, 0.9})$, $q_{0.975} = f^{-1}(q_{Y, 0.975})$.
+\end{enumerate}
+
+\noindent The MEM and WHO methods are special cases of this procedure with the following specifications:
+\begin{itemize}
+\item In the MEM method, $f$ is chosen as the natural logarithm, while the number of observations per season is set to $K = 30/n$. (The exact specification used in the \texttt{R} package \texttt{mem} is $K = \max(1, \lfloor 30/n \rceil)$, where $\lfloor \cdot \rceil$ denotes rounding to the nearest integer.) The total nuber of historical observations is thus kept (approximately) fixed.
+\item In the WHO method, the standard procedure is to set $f$ to the identity function (i.e.\ no transformation is applied). If peaks vary considerably, a log-tranformation is recommended \citep{WHO2017}. Irrespective of the number $n$ of historical seasons, $K = 1$ observation per season is used.
+\end{itemize} 
+
+\noindent The rationale behind this approach is that ``about 50--60\% of the season peaks should be above the moderate threshold, $\pm 10\%$ above the high threshold and $\pm 2.5\%$ above the extraordinary threshold \citep{WHO2017}. In most previous descriptions (e.g., \ \citealt{WHO2014, Vega2015}), the thresholds have been introduced as upper ends of one-sided confidence intervals associated with the the arithmetic (WHO method) or geometric mean (MEM) of the historical reference observations in $\mathcal{X}$. This, however, is slightly imprecise terminology as in the computations $\sigma$ rather than $\sigma/\sqrt{n}$ is used. If indeed confidence intervals were used, these would get narrower the more historical seasons were available, and the thresholds for all levels would eventually converge to the arithmetic / geometric mean. This is obviously not the intended behaviour.
+
+% see function iconfianza.aritmetica
+
+\section{An overview of recent applications}
 \label{sec:recent_applications}
 
-Cite Benedetti who use it as a "gold standard". Mention Green GB who compare to percentile method. Vos mention fixed criterion model -- what is that?
+To get a better understanding of the different settings in which the MEM and WHO methods are applied in practice we performed a literature search among all published articles citing the papers \cite{Vega2015}, \cite{WHO2014} and \cite{WHO2017}. The results are summarized in Table \ref{tab:literature}. As can be seen from the numerous entries from the years 2019 and 2020, the MEM has quickly become the standard in the determination of intensity thresholds for influenza and other respiratory diseases. In most analyses, the suggested threshold levels at the 40th, 90th and 97.5th percentile are used. The contributions come from numerous countries and in many cases have been co-authors by representatives of national or regional public health agencies. Variability with respect to the number $n$ of historical seasons included is considerable, with a range from 3 to 16 years. Consequently, the number of observations included per season ranges from two to ten.
+
+\begin{table}
+\caption{Applications of the moving epidemic method and WHO method to determie severity thresholds. Does not contain works where only baseline thresholds are computed. The number of seasons included to compute thresholds is denoted by $n$, the number of observations used per season by $K$. Abbreviations: SARI = severe acute respiratory infection; ILI = influenza-like illness; RSV = respiratory syncytial virus.}
+\label{tab:literature}
+\center
+\footnotesize
+\begin{tabular}{l l l l l l l}
+\multicolumn{7}{c}{(a) Moving epidemic method}\\ \\
+
+\toprule
+region & disease & years covered & $n$ & $K$ & percentiles & authors\\
+\midrule
+Australia & ILI/influenza & 2012--2017 & 5 & 6 & 40, 90, 99 & \cite{Vette2018}\\
+Australia, Chile, & ILI/SARI & 2013--2019 & 6 & 5 & 40, 90, 97.5 & \cite{Sullivan2019}\\
+New Zealand,\\
+South Africa\\
+Catalonia & ILI & 2010--2016 & 5 & 6 & ? & \cite{Basile2018}\\
+Catalonia & ILI & 2005--2018 & 12 & 3 & ? & \cite{Basile2019}\\
+Catalonia & ILI/influenza & 2010--2017 & 7 & 4 & ? & \cite{Torner2019}\\
+Egypt & SARI/ILI & 2010--2017 & 6 & 5 & 40, 90, 97.5 & \cite{AbdElGawad2020}\\
+Egypt & SARI & 2013--2015 & 3 & 10 & ? & \cite{Elhakim2019}\\
+England & ILI & 2010--2016 & 6 & 5 & ? & \cite{Wagner2018}\\
+Finland & influenza & 2011--2016 & 5 & 6 & ? & \cite{Pesaelae2019}\\
+Montenegro & ILI & 2010--2018 & 7 & 4 & 40, 90, 97.5 & \cite{Rakocevic2019}\\
+Morocco & ILI & 2005--2017 & 11 & 3 & 40, 90, 97.5 & \cite{Rguig2020}\\
+Netherlands & RSV & 2005--2017 & 12 & 3 & 40, 90, 97.5 & \cite{Vos2019}\\
+Norway & influenza & 2006--2015 & 9 & 3 & ? & \cite{Benedetti2019}\\
+Pakistan & ILI, SARI & 2008--2017 & 10 & 3 & 40, 90, 97.5 & \cite{Nisar2020}\\
+Portugal & ILI & 2012--2017 & 5 & 6 & 40, 90, 97.5 & \cite{Pascoa2018}\\
+Scotland & influenza & 2010--2018 & 7 & 4 & ? & \cite{Murray2018}\\
+Slovenia & RSV & 2008--2018 & 10 & 3 & 40, 90, 97.5 & \cite{Grilc2020}\\
+Spain (17 regions) & ILI & 2003--2015 & 4--10 & 3--8 & 40, 90, 97.5 & \cite{Bangert2017}\\
+Spain & ILI & 2001--2018 & 16 & 2 & 40, 90, 97.5 & \cite{RedondoBravo2020}\\
+Tunisia & ILI & 2009-2018 & 9 & 3 & 50, 90, 95 & \cite{Bouguerra2020}\\
+United Kingdom & ILI & 2000--2013 & 10 & 3 & 40, 90, 97.5 & \cite{Green2015}\\
+United Kingdom & ILI/RSV & 2011--2018 & 4--6 & 5--8 & 40, 90, 97.5 & \cite{Harcourt2019}\\
+USA & ILI/influenza & 2003--2015 & 11 & 3 & 50, 90, 98 & \cite{Biggerstaff2017}\\
+USA & ILI & 2010--2015 & 5 & 6 & 50, 90, 98 & \cite{Dahlgren2018}\\
+USA & influenza & 2010--2016 & 6 & 5 & 50, 90, 98 & \cite{Dahlgren2019}\\
+\bottomrule\\
+\multicolumn{7}{c}{(b) WHO method}\\ \\
+\toprule
+region & disease & years covered & $n$ & $K$ & percentiles & authors\\
+\midrule
+Cambodia & ILI & 2009--2015 & 7 & 1 & mean, 90, 95 & \cite{Ly2017}\\
+Morocco & ILI & 2005--2017 & 11 & 1 & 40, 90, 97.5 & \cite{Rguig2020}\\
+Philippines & ILI & 2006--2012 & 7 & 1 & 90 & \cite{Lucero2016}\\
+Victoria/Australia & ILI & 2002--2011 & 6--10 & 1 & 90, 95 & \cite{Tay2013}\\
+\end{tabular}
+\end{table}
+
+% Cite Benedetti who use it as a "gold standard". Mention Green GB who compare to percentile method. Vos mention fixed criterion model -- what is that?
 
 
-\textbf{add table with Jonas' literature review here}
 
 \section{Simulaton study}
 \label{sec:simulation}
 
+\subsection{Goal}
+
+As detailed in the previous section, the MEM and WHO methods have been applied extensively in practice and overall seems to produce thresholds which are considered useful by domain experts. A more statistical assessment, however has so far been missing. We perform a simulation study to compare four versions of the general approach described in Section \ref{sec:definitions}:
+\begin{enumerate}
+\item[(a)] No transformation, $K = 1$. This corresponds to the WHO method.
+\item[(b)] No transformation, $K = 30/n$.
+\item[(c)] Logarithmic transformation, $K = 1$.
+\item[(d)] Logarithmic transformation, $K = 30/n$. This corresponds to the MEM approach.
+\end{enumerate}
+
+Our main focus is on the share of seasons classified as low, medium, high and very high. As mentioned before, the rationale is to set thresholds ``in such a way that about 50--60\% of the season peaks should be above the moderate threshold, $\pm$ 10\% above the high threshold and $\pm 2.5\%$ above the extraordinary threshold'' \citep{WHO2017}. Concerning the choice between an identity and logarithmic transformation -- or, equivalently, the choice between arithmetic and geometric mean -- one might expect that the logarithm is more appropriate if observations are skewed. The choice $K = 30/n$ has the advantage of ensuring a reasonably large number of reference observations. However, this comes at the price of using observations which are not actually from peak weeks, and will by definition be lower than the actual peeks. If $n$ is low, this may lead to a larger number of seasons classified as high or very high intensity. We will assess empirically whether such an effect can be observed, and how pronounced it is depending on the number of vailable historical seasons.
+
 \subsection{Permutation approach based on historical ILI data}
+
+A pure simulation study requires careful specification of a data-generating process. Given the rather irregular timing and variability in peak values between influenza seasons, this is not a trivial task. We therefore resort to a permutation approach based on historical data in order to closely mimic the actual patterns.
+
+Assume we have $N$ years of historical data on a measure of influenza activity. For each value $n = 5, \dots, 15$ we then perform the following steps a total of 500 iterations:
+
+\begin{itemize}
+\item Sample an ordered sequence of $n$ seasons from the $N$ available seasons. As commonly done in bootstrap experiments, this is done with equal probability for each season and \textit{with replacement}, meaning that the same season can appear more than once in the sampled sequence. This approach is also referred to as the \textit{seasonal block bootstrap} \citep{Politis2001}.
+\item Apply appproaches (a)--(d) as described in the previous subsection to obtain intensity thresholds for medium (40th percentile), high (90th percentile) and very high intensity (97.5th percentile).
+\item Compute which fraction of the $N$ available seasons would be classified as low, moderate, high and very high.
+\end{itemize}
+
+Then the obtained thresholds and shares of the different intensity levels can be assessed as a function of the number $n$ of seasons used in the computations.
 
 \subsection{Data}
 
