@@ -1,12 +1,16 @@
 ############################################################
 # Running permutation/simulation study for Switzerland
 
+library(here)
 library(mem)
 source("functions_simulations_mem.R")
 
 dat_for_mem <- read.csv("../Data/for_mem/ili_mem_ch.csv")
 
-plot(dat_for_mem$`inc.2000/2001`)
+# compute peaks of seasons:
+peaks_test <- apply(dat_for_mem, 2, max)
+
+plot(dat_for_mem$season.2000.2001)
 
 # simulation settings:
 range_i.seasons <- 5:15 # range to be explored for i.seasons
@@ -26,19 +30,19 @@ thresholds_ch_0.9 <- thresholds_ch_0.975 <-
 # run simulation:
 for(k in 1:n_sim){
   set.seed(k)
+  
+  # generate bootstrapped time series:
+  inds_train <- sample(1:ncol(dat_for_mem), size = max(range_i.seasons), replace = TRUE)
+  dat_train <- dat_for_mem[, inds_train]
 
   # run through different numbers of past seasons used:
   for(a in seq_along(range_i.seasons)){
 
-    # split into training and test:
-    inds_train <- sample(1:ncol(dat_for_mem), size = range_i.seasons[a], replace = TRUE)
-    dat_train <- dat_for_mem[, inds_train]
-    dat_test <- dat_for_mem # [, -inds_train]
-    # compute peaks of test seasons:
-    peaks_test <- apply(dat_test, 2, max)
+    # restrict to first a seasons:
+    dat_train_temp <- dat_train[, 1:range_i.seasons[a]]
 
     # run memmodel:
-    memmodel_temp <- memmodel(dat_train, i.seasons = range_i.seasons[a],
+    memmodel_temp <- memmodel(dat_train_temp, i.seasons = range_i.seasons[a],
                               i.level.intensity = c(0.4, 0.9, 0.975))
 
     # store thresholds:
@@ -91,15 +95,16 @@ thresholds1_ch_0.9 <- thresholds1_ch_0.975 <-
 for(k in 1:n_sim){
 
   set.seed(k)
+  
+  # generate bootstrapped time series:
+  inds_train <- sample(1:ncol(dat_for_mem), size = max(range_i.seasons), replace = TRUE)
+  dat_train <- dat_for_mem[, inds_train]
 
   # run through different numbers of past seasons used:
   for(a in seq_along(range_i.seasons)){
-    # split into training and test data:
-    inds_train <- sample(1:ncol(dat_for_mem), size = range_i.seasons[a], replace = TRUE)
-    dat_train <- dat_for_mem[, inds_train]
-    dat_test <- dat_for_mem #[, -inds_train]
-    # compute peaks of test seasons:
-    peaks_test <- apply(dat_test, 2, max)
+    
+    # restrict to first a seasons (could also restrict to last n seasons, does not make a difference):
+    dat_train_temp <- dat_train[, 1:range_i.seasons[a]]
 
     # run memmodel
     memmodel_temp <- memmodel(dat_train, i.seasons = range_i.seasons[a],
@@ -151,16 +156,16 @@ thresholds_nolog_ch_0.9 <- thresholds_nolog_ch_0.975 <-
 # run simulation:
 for(k in 1:n_sim){
   set.seed(k)
+  
+  # generate bootstrapped time series:
+  inds_train <- sample(1:ncol(dat_for_mem), size = max(range_i.seasons), replace = TRUE)
+  dat_train <- dat_for_mem[, inds_train]
 
   # run through different numbers of past seasons used:
   for(a in seq_along(range_i.seasons)){
 
-    # split into training and test:
-    inds_train <- sample(1:ncol(dat_for_mem), size = range_i.seasons[a], replace = TRUE)
-    dat_train <- dat_for_mem[, inds_train]
-    dat_test <- dat_for_mem # [, -inds_train]
-    # compute peaks of test seasons:
-    peaks_test <- apply(dat_test, 2, max)
+    # restrict to first a seasons:
+    dat_train_temp <- dat_train[, 1:range_i.seasons[a]]
 
     # run memmodel:
     memmodel_temp <- memmodel(dat_train, i.seasons = range_i.seasons[a],
@@ -216,15 +221,16 @@ thresholds1_nolog_ch_0.9 <- thresholds1_nolog_ch_0.975 <-
 for(k in 1:n_sim){
 
   set.seed(k)
+  
+  # generate bootstrapped time series:
+  inds_train <- sample(1:ncol(dat_for_mem), size = max(range_i.seasons), replace = TRUE)
+  dat_train <- dat_for_mem[, inds_train]
 
   # run through different numbers of past seasons used:
   for(a in seq_along(range_i.seasons)){
-    # split into training and test data:
-    inds_train <- sample(1:ncol(dat_for_mem), size = range_i.seasons[a], replace = TRUE)
-    dat_train <- dat_for_mem[, inds_train]
-    dat_test <- dat_for_mem #[, -inds_train]
-    # compute peaks of test seasons:
-    peaks_test <- apply(dat_test, 2, max)
+    
+    # restrict to first a seasons:
+    dat_train_temp <- dat_train[, 1:range_i.seasons[a]]
 
     # run memmodel
     memmodel_temp <- memmodel(dat_train, i.seasons = range_i.seasons[a],
