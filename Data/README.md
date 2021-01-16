@@ -10,7 +10,7 @@ Les données disponibles sur nos sites (https://www.sentiweb.fr, et https://*.se
 Population data from INSEE, https://www.insee.fr/en/statistiques/2382601?sommaire=2382613
 
 ### Spain: 
-Data extracted from Informes Semanales available at https://vgripe.isciii.es/inicio.do using WebPlotDigitizer, https://apps.automeris.io/wpd/. THESE ARE NOT EXACT DATA as the visual extraction necessarily adds some noise. We consider this unproblematic for the presented analysis which only uses peak values, but these data are likely not suitable for other modelling exercises.
+Data extracted from Informe Anual available at https://vgripe.isciii.es/inicio.do, section Informes semanales, using WebPlotDigitizer, https://apps.automeris.io/wpd/. THESE ARE NOT EXACT DATA as the visual extraction necessarily adds some noise. We consider this unproblematic for the presented analysis which only uses peak values, but these data are likely not suitable for other modelling exercises.
 
 ### Switzerland:
 Data available in the R package HIDDA.forecasting https://hidda.github.io/forecasting/ by Sebastian Meyer, FAU Erlangen. Source indicated in the package documentation:
