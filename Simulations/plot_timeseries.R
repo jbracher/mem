@@ -13,7 +13,7 @@ matr <- dat_ch
 xlim <- c(1990, 2020)
 plot_mem_ts <- function(matr, xlim, ylab = "inc / 100,000", ...){
   years <- as.numeric(substr(colnames(matr), start = 13, stop = 16)) - 1
-  plot(NULL, xlim = xlim, ylim = c(0, 1.1*max(matr)), xlab = "", ylab = ylab, ...)
+  plot(NULL, xlim = xlim, ylim = c(0, 1.2*max(matr)), xlab = "", ylab = ylab, ...)
   abline(v = seq(from = floor(xlim[1]), to = ceiling(xlim[2])), col = "grey")
 
   weeks_per_seas <- nrow(matr)
@@ -30,17 +30,19 @@ bplot_ranks <- function(matr, ylab = ""){
   for(i in 1:6) boxplot(apply(matr, 2, get_nth, n = i), at = i, add = TRUE, axes = FALSE)
 }
 
+pdf("../Draft/figure/plot_data.pdf", width = 9, height = 5.5)
 par(las = 1, mar = c(3, 4, 0.5, 1))
 layout(matrix(1:8, ncol = 2, byrow = TRUE), widths = c(8, 2))
-plot_mem_ts(dat_fr, xlim = c(1986, 2019)); legend("topleft", legend = "France", bty = "n", cex = 1.2)
+plot_mem_ts(dat_fr, xlim = c(1985.5, 2019.5)); legend("topleft", legend = " France", bty = "n", cex = 1.2)
 bplot_ranks(dat_fr)
 
-plot_mem_ts(dat_es, xlim = c(1986, 2019)); legend("topleft", legend = "Spain", bty = "n", cex = 1.2)
+plot_mem_ts(dat_es, xlim = c(1998.5, 2019.5)); legend("topleft", legend = " Spain", bty = "n", cex = 1.2)
 bplot_ranks(dat_es)
 
-plot_mem_ts(dat_ch, xlim = c(1986, 2019)); legend("topleft", legend = "Switzerland", bty = "n", cex = 1.2)
+plot_mem_ts(dat_ch, xlim = c(2000.5, 2015.5)); legend("topleft", legend = " Switzerland", bty = "n", cex = 1.2)
 bplot_ranks(dat_ch)
 
-plot_mem_ts(dat_us, xlim = c(1986, 2019), ylab = "wILI %"); legend("topleft", legend = "United States", bty = "n", cex = 1.2)
+plot_mem_ts(dat_us, xlim = c(1998.5, 2017.5), ylab = "wILI %"); legend("topleft", legend = " United States", bty = "n", cex = 1.2)
 bplot_ranks(dat_us)
+dev.off()
 
