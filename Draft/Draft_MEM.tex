@@ -21,7 +21,7 @@ Karlsruhe Institute of Technology (KIT), Chair of Statistics and Econometrics}
 \maketitle
 
 
-\abstract{The moving epidemic method (MEM) and the WHO method are widely used approaches to determine intensity levels for seasonal influenza and influenza-like illness (ILI). They are conceptually similar, but differ in two aspects. Firstly, the MEM involves a log-transformation of incidence data, while the WHO method typically operates on the original scale of the data. Secondly, the MEM method by default uses more than one observation from each past season, with a fixed total number of observations to include. The WHO method, on the other side, uses only the single highest value from each season to determine peak intensity thresholds. We provide statistical arguments and a simulation study to assess the impact of these choices on the resulting intensity thresholds and empirical exceedance proportions. The simulation study is based on a bootstrap approach using historical ILI data from France, Spain, Switzerland and the United States. We find that using data on the original scale leads to a too large proportion of seasons being classified as high or ``very high intensity intensity, which can to some degree be mitigated by using a logarithmic transformation. When fixing the total number of observations to include as in the MEM, intensity thresholds tend to increase as more historical data becomes available. When data is only available for few seasons, there is a rather large chance of classifying a new season as high or very high intenstity. We therefore advocate always using one observation per season with a log transformation, i.e.\ a hybrid between the default settings of the MEM and WHO methods. This adaptation is possible within an existing software implementation of the MEM approach and thus easy to apply.}
+\abstract{The moving epidemic method (MEM) and the WHO method are widely used approaches to determine intensity levels for seasonal influenza and influenza-like illness (ILI). They are conceptually similar, but differ in two aspects. Firstly, the MEM involves a log-transformation of incidence data, while the WHO method typically operates on the original scale of the data. Secondly, the MEM method by default uses more than one observation from each past season, with a fixed total number of observations to include. The WHO method, on the other side, uses only the single highest value from each season to determine peak intensity thresholds. We provide statistical arguments and a simulation study to assess the impact of these choices on the resulting intensity thresholds and empirical exceedance proportions. The simulation study is based on a bootstrap approach using historical ILI data from France, Spain, Switzerland and the United States. We find that using data on the original scale leads to a too large proportion of seasons being classified as high or very high intensity intensity, which can to some degree be mitigated by using a logarithmic transformation. When fixing the total number of observations to include as in the MEM, intensity thresholds tend to increase as more historical data becomes available. When data is only available for few seasons, there is a rather large chance of classifying a new season as high or very high intenstity. We therefore advocate always using one observation per season with a log transformation, i.e.\ a hybrid between the default settings of the MEM and WHO methods. This adaptation is possible within an existing software implementation of the MEM approach and thus easy to apply.}
 
 \section{Introduction}
 
@@ -39,7 +39,7 @@ In the following we focus on the construction of thresholds  for peak intensity,
 
 \begin{enumerate}
 \item Within each historical season $j = 1, \dots, m$ order all observations in decreasing order, denoting the $i$-th largest observation from season $j$ by $X^{(j)}_i$.
-\item Select the $n$ largest observations from each of the $m$ past seasons to construct a reference set $\mathcal{X} = \{X_i^{(j)}; j = 1, \dots, m; i = 1, \dots, n\}$.
+\item Select the $n$ largest observations from each of the $m$ past seasons to construct a reference set $\mathcal{X} = \{X_i^{(j)}: j = 1, \dots, m; i = 1, \dots, n\}$.
 \item Apply an (invertible) transformation $Y_i^{(j)} = f(X_i^{(j)})$ to all members of the reference set $\mathcal{X}$ to obtain a reference set $\mathcal{Y}$ of transformed historical observations.
 \item Assume that the transformed values in $\mathcal{Y}$ come from a normal distribution and compute estimates $\hat\mu, \hat \sigma$ of its mean and standard deviation.
 \item Define intensity thresholds on the transformed scale as quantiles of the normal distribution N$(\hat\mu, \hat\sigma^2)$, i.e.\ compute
@@ -57,7 +57,7 @@ where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution. A
 
 \noindent The MEM and WHO methods are special cases of this procedure with the following specifications:
 \begin{itemize}
-\item In the WHO method, the standard procedure is to set $f$ to the identity function (i.e.\ no transformation is applied). If peaks vary considerably, a log-tranformation is recommended \citep{WHO2017}. Irrespective of the number $m$ of historical seasons, $n = 1$ observation per season is used.
+\item In the WHO method, the standard procedure is to set $f$ to the identity function (i.e.\ no transformation is applied). If peaks incidence vary strongly across seasons, a log-tranformation is recommended \citep{WHO2017}. Irrespective of the number $m$ of historical seasons, $n = 1$ observation per season is used.
 \item In the MEM method, the default choice for $f$ is the natural logarithm, while the number of observations per season is set to $n = 30/m$. (The exact specification used in the \texttt{R} package \texttt{mem} is $n = \max(1, \lfloor 30/m \rceil)$, where $\lfloor \cdot \rceil$ denotes rounding to the nearest integer.) The total number of historical observations is thus kept (approximately) fixed, ensuring a reasonably large number of reference observations
 \end{itemize}
 Note that the software implementation of the moving epidemic method in the \texttt{R} package \texttt{mem} is rather general and permits the user to choose $n$, $m$, and $f$ (between the identify and logarithmic function). The term \textit{moving epidemic method} could thus also be used as an umbrella term for the general procedure described above. We here use it in a more narrow sense to refer to the specific procedure described in \cite{Vega2015}, \cite{WHO2017} and reflected in the default parameters of the \texttt{mem} package.
@@ -101,7 +101,7 @@ Pakistan & ILI, SARI & 2008--2017 & 10 & 3 & 40, 90, 97.5 & \cite{Nisar2020}\\
 Portugal & ILI & 2012--2017 & 5 & 6 & 40, 90, 97.5 & \cite{Pascoa2018}\\
 Scotland & influenza & 2010--2018 & 7 & 4 & ? & \cite{Murray2018}\\
 Scotland & influenza & 2010--2019 & 7--8 & 4 & 40, 90, 97.5 & \cite{Dickson2020}\\
-Slovenia & RSV & 2008--2018 & 10 & 3 & 40, 90, 97.5 & \cite{Grilc2020}\\
+Slovenia & RSV & 2008--2018 & 10 & 3 & 40, 90, 97.5 & \cite{Grilc2021}\\
 Spain (17 regions) & ILI & 2003--2015 & 4--10 & 3--8 & 40, 90, 97.5 & \cite{Bangert2017}\\
 Spain & ILI & 2001--2018 & 16 & 2 & 40, 90, 97.5 & \cite{RedondoBravo2020}\\
 Tunisia & ILI & 2009-2018 & 9 & 3 & 50, 90, 95 & \cite{Bouguerra2020}\\
@@ -137,12 +137,12 @@ Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed observati
 \mu_n
 \end{array}\right) \ \ \ \text{and} \ \ \ \text{Cov}\left(\mathbf{Y}^{(j)}\right) = \boldsymbol{\Sigma} =
 \left(\begin{array}{ccc}
-\sigma_{1, 1} & \cdots & \sigma_{1n}\\
+\sigma_{1, 1} & \cdots & \sigma_{1, n}\\
 \vdots & \ddots &\vdots\\
-\sigma_{n, 1} & \cdots & \sigma_{nn}
+\sigma_{n, 1} & \cdots & \sigma_{n, n}
 \end{array}\right),
 \end{align}
-respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. It can then be shown that the expectations of $\hat\mu$ and $\hat{\sigma}^2$ are given by
+respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. It can then be shown that the expectations of $\hat\mu$ and $\hat{\sigma}^2$ when using $m$ seasons and $n$ observations from each season are given by
 \begin{align}
 \mathbb{E}(\hat{\mu}) & = \frac{1}{n} \sum_{i = 1}^n \mu_i,
 \label{eq:expectation_mu}\\
@@ -253,12 +253,16 @@ When just using $n = 1$ irrespective of the number of historical seasons availab
 \section{Discussion}
 \label{sec:discussion}
 
-We provided a statistical assessment of different implementation choices in a simple and widely used framework for the computation of influenza intensity thresholds. We found that using a log transformation to intensity measures prior to the computation of thresholds empirically led to better behaved thresholds with cloesr to nominal exceedance rates. Concerning the question of how many observations per historical season should be included in the computation of thresholds, we provided analytical arguments and empirical evidence that the common choice $n = 30/m$ leads to too low thresholds when few historical seasons are available. We therefore recommend to adopt $n = 1$ irrespective of the number $M$ of available historical seasons. This is possible using the available implementation in the \texttt{R} package \texttt{mem} and only requires setting \texttt{i.n.max = 1} in the call of the \texttt{memmodel} to override the default value 30/m.
+We provided a statistical assessment of different implementation choices in a simple and widely used framework for the computation of influenza intensity thresholds. We found that using a log transformation to intensity measures prior to the computation of thresholds empirically led to better behaved thresholds with closer to nominal exceedance rates. Concerning the question of how many observations per historical season should be included in the computation of thresholds, we provided analytical arguments and empirical evidence that the common choice $n = 30/m$ leads to too low thresholds when few historical seasons are available. We therefore recommend to adopt $n = 1$ irrespective of the number $M$ of available historical seasons. This is possible using the available implementation in the \texttt{R} package \texttt{mem} and only requires setting \texttt{i.n.max = 1} in the call of the \texttt{memmodel} to override the default value 30/m.
 
 We focused on the computation of influenza intensity thresholds, but the same general arguments apply to the computation of thresholds to determine the onset of a season \citep{Vega2012}. As variability among observations around the season onset may be lower than around the peak the problem may be less severe; we did not assess this empirically as not all our data sets fully covered the off-season.
 
 More sophisticated methods to determine influenza intensity thresholds could be imagined, e.g.\ based on the broad literature on outbreak and anomaly detection \citep{Unkel2012}. However, we think that in practice a simple and interpretable tool with a robust software implementation like the MEM is a good choice. The emergence of a standard approach at the European level and beyond will contribute to improved comparability of results and facilitate the evaluation and refinement of the applied tool. With this work we hope to contribute a statistical perspective on this topic, which can complement public health practitioners' experience from applied analyses.
 
+
+\section*{Data and code}
+
+Materials to reproduce the presented results are available at \url{https://github.com/jbracher/mem}.
 
 
 \bibliographystyle{apalike}
