@@ -1,3 +1,4 @@
+# function to summarize simulation results
 sim_summary <- function(results_0.4, results_0.9, results_0.975, range_i.seasons,
                         interval = c(0.025, 0.975)){
   if(length(interval) != 2) stop("interval needs to be of length 2.")
@@ -32,6 +33,7 @@ modify_alpha <- function(col, alpha){
   rgb(x[1], x[2], x[3], alpha = alpha)
 }
 
+# plotting function for thresholds
 plot_sim_summary <- function(sim_summary, ylim = NULL, show_bands = TRUE, ...){
   ind_lower <- names(sim_summary)[grepl("q_", names(sim_summary))][1]
   ind_upper <- names(sim_summary)[grepl("q_", names(sim_summary))][2]
@@ -68,6 +70,7 @@ plot_sim_summary <- function(sim_summary, ylim = NULL, show_bands = TRUE, ...){
   }
 }
 
+# plotting function for exceedance proportions
 plot_exceedane_summary <- function(summary_exceedance, ...){
   summary_exceedance$averages
   range_i.seasons <- as.numeric(gsub("i.seasons_", "", rownames(summary_exceedance$averages), 1))
@@ -85,4 +88,21 @@ plot_exceedane_summary <- function(summary_exceedance, ...){
           col = "chartreuse4", border = NA)
 
   abline(h = c(0.4, 0.9, 0.975), lty = 3)
+}
+
+legend_summary <- function(){
+  plot(NULL, xlim = 0:1, ylim = 0:1, axes = FALSE, xlab = "", ylab = "")
+  legend("top", legend = c("Intensity levels:", "very high", "high", "medium", "low", 
+                           "First and third column:", "mean threshold", "empirical 5% and 95% quantiles", "analytical approximation of", "mean threshold",
+                           "Second and fourth column:",  "intended shares of intensity levels", "empirical shares", ""), 
+         col = c(NA, "red", "darkorange", "darkgoldenrod1", "chartreuse4",
+                 NA, "black", "grey", "black", NA,
+                 NA, "black", "red"),
+         pch = c(NA, 15, 15, 15, 15, 
+                 NA, 15, 15, 1, NA,
+                 NA, NA, 15, NA), 
+         lty = c(NA, NA, NA, NA, NA,
+                 NA, 2, NA, NA, NA,
+                 NA, 3, NA, NA),
+         ncol = 3, bty = "n")
 }

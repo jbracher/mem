@@ -1,6 +1,7 @@
 # Preparing the different data sets for use of mem
 
-setwd("/home/johannes/Documents/Ideas/mem/Simulations")
+# setwd("/home/johannes/Documents/Ideas/mem/Simulations")
+library(here)
 
 # France:
 

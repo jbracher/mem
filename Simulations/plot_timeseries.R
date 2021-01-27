@@ -11,9 +11,16 @@ plot(dat_us[, 5])
 
 matr <- dat_ch
 xlim <- c(1990, 2020)
+
 plot_mem_ts <- function(matr, xlim, ylab = "inc / 100,000", ...){
   years <- as.numeric(substr(colnames(matr), start = 13, stop = 16)) - 1
-  plot(NULL, xlim = xlim, ylim = c(0, 1.2*max(matr)), xlab = "", ylab = ylab, ...)
+  labels_years <- gsub(".", "/", substr(colnames(matr), start = 8, stop = 16), fixed = TRUE)
+  
+  plot(NULL, xlim = xlim, ylim = c(0, 1.2*max(matr)), xlab = "", ylab = ylab, axes = FALSE,...)
+  axis(1, at = years + 0.5, labels = labels_years)
+  axis(2)
+  box()
+  
   abline(v = seq(from = floor(xlim[1]), to = ceiling(xlim[2])), col = "grey")
 
   weeks_per_seas <- nrow(matr)
