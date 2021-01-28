@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage[left=2.5cm,right=2.5cm, top = 2.5cm, bottom = 3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{todonotes}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\newcommand{\sd}{s}
+\newcommand{\mean}{\bar{Y}}
+
+
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{A bootstrap-based comparison of ILI intensity thresholds from the moving epidemic and WHO methods: Derivations}
+\author{Johannes Bracher, Jonas Littek}
+\date{ \small
+Karlsruhe Institute of Technology (KIT), Chair of Statistics and Econometrics}
+
+\maketitle
+
+Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed observations (after transformation with $f$) from season $j$ in decreasing order, i.e.
+$$
+\mathbf{Y}^{(j)} = \left(
+\begin{array}{c}
+Y^{(j)}_1\\
+\vdots\\
+Y^{(j)}_n
+\end{array}
+\right)
+$$
+Now assume that $\mathbf{Y}^{(1)}, \dots, \mathbf{Y}^{(m)}$ are independent and identically distributed with mean and covariance matrix
+\begin{align}
+\mathbb{E}(\mathbf{Y}^{(j)}) = \boldsymbol{\mu} = \left(\begin{array}{c}
+\mu_1\\
+\vdots\\
+\mu_n
+\end{array}\right) \ \ \ \text{and} \ \ \ \text{Cov}(\mathbf{Y}^{(j)}) = \boldsymbol{\Sigma} =
+\left(\begin{array}{ccc}
+\sigma_{1, 1} & \cdots & \sigma_{1, n}\\
+\vdots & \ddots &\vdots\\
+\sigma_{n, 1} & \cdots & \sigma_{n, n}
+\end{array}\right),
+\end{align}
+respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. We are interested in the expectations of the random variables $\mean$ and $\sd$, where
+\begin{align*}
+\mean & = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)}\\
+\sd & = \sqrt{\frac{1}{mn - 1} \sum_{j = 1}^m \sum_{i = 1}^n \left(Y_i^{(j)} - \mean\right)^2}.
+\end{align*}
+It is straightforward to see that 
+\begin{equation}
+\mathbb{E}(\mean) = \frac{1}{n} \sum_{i = 1}^n \mu_i.
+\label{eq:expectation_mu}
+\end{equation}
+Instead of the empirical standard deviation $\sd$ we first consider the variance $\sd^2$, which can also be written as
+\begin{align}
+\sd^2 & = \frac{mn}{mn - 1} \left\{\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \left(Y_i^{(j)} - \mean\right)^2 \right\}\\
+& = \frac{mn}{mn - 1} \left\{ \underbrace{\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)2}}_{= a} \ \ \ - \ \ \ \underbrace{\left(\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right)^2}_{= b} \right\} \label{eq:sigma2hat}
+\end{align}
+%$$
+%\sd^2 = \underbrace{\left(\frac{1}{nK - 1} \sum_{j = 1}^n \sum_{i = 1}^K Y_i^{(j)2}\right)}_{ = a} \ \ \ - \ \ \ \underbrace{\left(\frac{1}{nK - 1} \sum_{j = 1}^n \sum_{i = 1}^K Y_i^{(j)} \right)^2}_{= b}.
+%$$
+We consider the two terms $a$ and $b$ separately, starting by
+\begin{align*}
+\mathbb{E}(a) & = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \mathbb{E}\left(Y_i^{(j)2}\right)\\
+& = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \left\{ \text{Var}\left(Y_i^{(j)}\right) + \mathbb{E}\left(Y_i^{(j)}\right)^2 \right\}\\
+& = \frac{m}{mn} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2).
+\end{align*}
+Then we note that
+\begin{align*}
+\mathbb{E}(b) & = \text{Var}\left( \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right) \ \ \ + \ \ \ \mathbb{E}\left(\frac{1}{mn}  \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right)^2\\
+& = \frac{1}{(mn)^2}\sum_{j = 1}^m \text{Var}\left(\sum_{i = 1}^n Y_i^{(j)} \right) \ \ \ + \ \ \ \left(\frac{m}{mn} \sum_{i = 1}^n \mu_i\right)^2\\
+& = \frac{m}{(mn)^2} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ \ \ + \ \ \ \frac{m^2}{(mn)^2}\left(\sum_{i = 1}^n \mu_i\right)^2.
+\end{align*}
+Plugging this back into equation \eqref{eq:sigma2hat} we obtain
+\begin{equation}
+\mathbb{E}(\sd^2) = \frac{m}{mn - 1} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2) \ \ \ - \ \ \ \frac{1}{n(mn - 1)} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ \ \ - \ \ \ \frac{m}{n(mn - 1)}\left(\sum_{i = 1}^K \mu_i\right)^2.
+\label{eq:expectation_sigma2}
+\end{equation}
+It is straightforward to see that for $n = 1$ the expressions \eqref{eq:expectation_mu} and \eqref{eq:expectation_sigma2} simplify to
+$$
+\mathbb{E}(\mean^2) = \mu_1 \ \ \text{ and } \ \ \mathbb{E}(\sd^2) = \sigma^2_1.
+$$
+
+There is no general way of computing the expectation $\mathbb{E}(\sd)$, but unless the true distribution of  $\sd$ has strong excess curtosis,
+\begin{equation}
+\mathbb{E}(\sd) \approx \sqrt{\mathbb{E}(\sd^2)}
+\label{eq:expectation_sigma}
+\end{equation}
+is a reasonable approximation. We can then plug equations \eqref{eq:expectation_mu} and \eqref{eq:expectation_sigma} into the formulae for the thresholds $q_{Y, \alpha}$ (with $\alpha \in \{0.4, 0.9, 0.975\}$) on the transformed scale and obtain
+$$
+\mathbb{E}(q_{Y, \alpha}) \approx \mathbb{E}(\mean) + z_\alpha \sqrt{\mathbb{E}(\sd^2)},
+$$
+where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution.
+
+If $f$ was set to the natural logarithm, the question remains how to obtain statements concerning thresholds $q_\alpha$ on the original scale. Approximation via a second-order Taylor expansion yields
+\begin{equation}
+\mathbb{E}(q_\alpha) = \mathbb{E}\left\{\exp(q_{Y, \alpha})\right\} \approx \exp\left\{\mathbb{E}(q_{Y, \alpha})\right\} \times \left\{1 + \frac{\text{Var}(q_{Y, \alpha})}{2} \right\}.
+\label{eq:taylor}
+\end{equation}
+
+Empirically, after transformation to the log scale, the variance of season peak values is low (between 0.02 and 0.4 for the adta sets analysed in Section \textbf{XXX} of the main manuscript). The resulting variances of $q_{Y, \alpha}$ are likewise quite small and do not play an importnat role in equation \eqref{eq:taylor}. We can thus use the even simpler approximation
+\begin{equation}
+\mathbb{E}(q_\alpha) \approx \exp\left\{\mathbb{E}(q_{Y, \alpha})\right\}.
+\end{equation}
+
+
+\end{document}

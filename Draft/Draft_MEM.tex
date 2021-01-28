@@ -8,6 +8,8 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 
+\newcommand{\sd}{s}
+\newcommand{\mean}{\bar{Y}}
 
 
 \begin{document}
@@ -41,16 +43,16 @@ In the following we focus on the construction of thresholds  for peak intensity,
 \item Within each historical season $j = 1, \dots, m$ order all observations in decreasing order, denoting the $i$-th largest observation from season $j$ by $X^{(j)}_i$.
 \item Select the $n$ largest observations from each of the $m$ past seasons to construct a reference set $\mathcal{X} = \{X_i^{(j)}: j = 1, \dots, m; i = 1, \dots, n\}$.
 \item Apply an (invertible) transformation $Y_i^{(j)} = f(X_i^{(j)})$ to all members of the reference set $\mathcal{X}$ to obtain a reference set $\mathcal{Y}$ of transformed historical observations.
-\item Assume that the transformed values in $\mathcal{Y}$ come from a normal distribution and compute estimates $\hat\mu, \hat \sigma$ of its mean and standard deviation.
-\item Define intensity thresholds on the transformed scale as quantiles of the normal distribution N$(\hat\mu, \hat\sigma^2)$, i.e.\ compute
-$$
-q_{Y, \alpha} = \hat{\mu} + z_\alpha \hat{\sigma},
-$$
+\item Assume that the transformed values in $\mathcal{Y}$ come from a normal distribution and compute estimates $\mean, \sd$ of its mean and standard deviation.
+\item Define intensity thresholds on the transformed scale as quantiles of the normal distribution N$(\mean, \sd^2)$, i.e.\ compute
+\begin{equation}
+q_{Y, \alpha} = \mean + z_\alpha \sd, \label{eq:def_q}
+\end{equation}
 where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution. A common choice for both methods \citep{WHO2017}, also implemented as the default in the \texttt{R} package \texttt{mem} \citep{Lozano2020} is to use
 \begin{itemize}
-\item the 40th percentile $q_{Y, 0.4} = \hat\mu - 0.25 \hat\sigma$ as the threshold between low and medium intensity;
-\item the 90th percentile $q_{Y, 0.9} = \hat\mu + 1.28 \hat\sigma$ as the threshold between medium and high intensity;
-\item the 97.5th percentile $q_{Y, 0.975} = \hat\mu + 1.96\hat\sigma$ as the threshold between high and very high intensity.
+\item the 40th percentile $q_{Y, 0.4} = \mean - 0.25 \sd$ as the threshold between low and medium intensity;
+\item the 90th percentile $q_{Y, 0.9} = \mean + 1.28 \sd$ as the threshold between medium and high intensity;
+\item the 97.5th percentile $q_{Y, 0.975} = \mean + 1.96\sd$ as the threshold between high and very high intensity.
 \end{itemize}
 \item Obtain thresholds on the original scale by applying the inverse transformation, i.e. setting $q_{0.4} = f^{-1}(q_{Y, 0.4})$, $q_{0.9} = f^{-1}(q_{Y, 0.9})$, $q_{0.975} = f^{-1}(q_{Y, 0.975})$.
 \end{enumerate}
@@ -62,7 +64,7 @@ where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution. A
 \end{itemize}
 Note that the software implementation of the moving epidemic method in the \texttt{R} package \texttt{mem} is rather general and permits the user to choose $n$, $m$, and $f$ (between the identify and logarithmic function). The term \textit{moving epidemic method} could thus also be used as an umbrella term for the general procedure described above. We here use it in a more narrow sense to refer to the specific procedure described in \cite{Vega2015}, \cite{WHO2017} and reflected in the default parameters of the \texttt{mem} package.
 
-The rationale behind the percentile-based approach is that ``about 50--60\% of the season peaks should be above the moderate threshold, $\pm 10\%$ above the high threshold and $\pm 2.5\%$ above the extraordinary threshold'' \citep{WHO2017}. Note that in most previous descriptions (e.g., \ \citealt{WHO2014, Vega2015}), the thresholds have been referred to as upper ends of one-sided confidence intervals associated with the the arithmetic (WHO method) or geometric mean (MEM) of the historical reference observations in $\mathcal{X}$. This, however, is slightly imprecise terminology as in the computations the standard deviation $\hat\sigma$ rather than the standard error $\hat\sigma/\sqrt{nm}$ of $\hat\mu$ is used. If indeed confidence intervals were used, these would tend to get narrower the more historical seasons were available, and the thresholds for all levels would eventually converge to the arithmetic / geometric mean. This is obviously not the intended behaviour.
+The rationale behind the percentile-based approach is that ``about 50--60\% of the season peaks should be above the moderate threshold, $\pm 10\%$ above the high threshold and $\pm 2.5\%$ above the extraordinary threshold'' \citep{WHO2017}. Note that in most previous descriptions (e.g., \ \citealt{WHO2014, Vega2015}), the thresholds have been referred to as upper ends of one-sided confidence intervals associated with the the arithmetic (WHO method) or geometric mean (MEM) of the historical reference observations in $\mathcal{X}$. This, however, is slightly imprecise terminology as in the computations the standard deviation $\sd$ rather than the standard error $\sd/\sqrt{nm}$ of $\mean$ is used. If indeed confidence intervals were used, these would tend to get narrower the more historical seasons were available, and the thresholds for all levels would eventually converge to the arithmetic / geometric mean. This is obviously not the intended behaviour.
 
 % see function iconfianza.aritmetica
 
@@ -127,9 +129,9 @@ Victoria/Australia & ILI & 2002--2011 & 6--10 & 1 & 90, 95 & \cite{Tay2013}\\
 \section{Analytical considerations on the choice of $n$}
 \label{sec:analytical}
 
-As detailed in the previous section, the MEM and WHO methods have been applied extensively in practice and overall seem to produce thresholds which are considered useful by domain experts. A more statistical assessment, however has so far been missing. Which choice of transformation function $f$ is most reaonable is largely an empirical question. Little more can be said than that a logarithmic transformation can be helpful if the distribution of peak values is skewed. However, some statements can be made on how the value chosen for $n$ impacts the expected results.
+As detailed in the previous section, the MEM and WHO methods have been applied extensively in practice and overall seem to produce thresholds which are considered useful by domain experts. A more statistical assessment, however has so far been missing. Which choice of transformation function $f$ is most reaonable is largely an empirical question. Little more can be said than that a logarithmic transformation can be helpful if the distribution of peak values is skewed. However, some statements can be made on how the value chosen for $n$ impacts the expected results for the thresholds $q_\alpha$.
 
-Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed observations from season $j$ in decreasing order, i.e. $\mathbf{Y}^{(j)} = (Y^{(j)}_1, \dots, Y^{(j)}_n)^\top$ with $Y^{(j)}_1 \geq Y^{(j)}_2 \geq \dots \geq Y^{(j)}_n$. Now assume that $\mathbf{Y}^{(1)}, \dots, \mathbf{Y}^{(m)}$ are independent and identically distributed with mean and covariance matrix
+We start by considering how the expectations of the empirical mean $\mean$ and standard deviation $\sd$ entering into equation \eqref{eq:def_q} depend on $n$. Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed observations from season $j$ in decreasing order, i.e. $\mathbf{Y}^{(j)} = (Y^{(j)}_1, \dots, Y^{(j)}_n)^\top$ with $Y^{(j)}_1 \geq Y^{(j)}_2 \geq \dots \geq Y^{(j)}_n$. Now assume that $\mathbf{Y}^{(1)}, \dots, \mathbf{Y}^{(m)}$ are independent and identically distributed with mean and covariance matrix
 \begin{align}
 \mathbb{E}\left(\mathbf{Y}^{(j)}\right) = \boldsymbol{\mu} = \left(\begin{array}{c}
 \mu_1\\
@@ -142,29 +144,29 @@ Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed observati
 \sigma_{n, 1} & \cdots & \sigma_{n, n}
 \end{array}\right),
 \end{align}
-respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. It can then be shown that the expectations of $\hat\mu$ and $\hat{\sigma}^2$ when using $m$ seasons and $n$ observations from each season are given by
+respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. It can then be shown that the expectations of $\mean$ and $\sd^2$ when using $m$ seasons and $n$ observations from each season are given by
 \begin{align}
-\mathbb{E}(\hat{\mu}) & = \frac{1}{n} \sum_{i = 1}^n \mu_i,
+\mathbb{E}(\mean) & = \frac{1}{n} \sum_{i = 1}^n \mu_i,
 \label{eq:expectation_mu}\\
-\mathbb{E}(\hat{\sigma}^2) & = \frac{m}{mn - 1} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{n(mn - 1)} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ - \ \frac{m}{n(mn - 1)}\left(\sum_{i = 1}^n \mu_i\right)^2,
+\mathbb{E}(\sd^2) & = \frac{m}{mn - 1} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{n(mn - 1)} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ - \ \frac{m}{n(mn - 1)}\left(\sum_{i = 1}^n \mu_i\right)^2,
 \label{eq:expectation_sigma2}
 \end{align}
 %\begin{align}
-%\mathbb{E}(\hat{\mu}) & = \frac{1}{K} \sum_{i = 1}^K \mu_i,
+%\mathbb{E}(\mean) & = \frac{1}{K} \sum_{i = 1}^K \mu_i,
 %\label{eq:expectation_mu}\\
-%\mathbb{E}(\hat{\sigma}^2) & = \frac{n}{nK - 1} \sum_{i = 1}^K (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{K(nK - 1)} \sum_{i = 1}^K \sum_{i' = 1}^K \sigma_{i,i'} \ - \ \frac{n}{K(nK - 1)}\left(\sum_{i = 1}^K \mu_i\right)^2,
+%\mathbb{E}(\sd^2) & = \frac{n}{nK - 1} \sum_{i = 1}^K (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{K(nK - 1)} \sum_{i = 1}^K \sum_{i' = 1}^K \sigma_{i,i'} \ - \ \frac{n}{K(nK - 1)}\left(\sum_{i = 1}^K \mu_i\right)^2,
 %\label{eq:expectation_sigma2}
 %\end{align}
 respectively. The derivation is provided in Supplement \textbf{XXX}. For reasons detailed there, if the transformation function $f$ is the identity or the natural logarithm,
 \begin{equation}
-\mathbb{E}(q_\alpha) \approx f^{-1}\left\{\mathbb{E}(\hat\mu) + z_\alpha \sqrt{\mathbb{E}(\hat\sigma^2)}\right\}
+\mathbb{E}(q_\alpha) \approx f^{-1}\left\{\mathbb{E}(\mean) + z_\alpha \sqrt{\mathbb{E}(\sd^2)}\right\}
 \label{eq:expectation_q}
 \end{equation}
-usually holds in good approximation (with $f^{-1}$ the idenity or exponential function). This implies that for $n = 1$, we have
+usually holds in good approximation in our applied setting (with $f^{-1}$ the idenity or exponential function). This implies that for $n = 1$, we have
 $$
 \mathbb{E}(q_\alpha) \approx f^{-1}(\mu_1 + z_\alpha \sigma_1).
 $$
-This is a desirable property. Loosely speaking, if in addition the $Y_{1}^{(j)}$ come from a normal distribution, the nominal exceedance probabilities for the different thresholds would on average be achieved. If a different value $n > 1$ is chosen, this will generally no longer be the case. Equations \eqref{eq:expectation_mu}--\eqref{eq:expectation_q} tell us by how much $q_\alpha$ can be expected to differ from the intended value $f^{-1}(\mu_1 + z_\alpha \sigma_1)$. By the definition of the $\mu_i$ (with $\mu_i$ the expectation of the $i$-th largest observation in a given season), $\mathbb{E}(\hat\mu)$ decreases in $n$. In most (possibly all) settings this also translates to the $q_\alpha$. As a consequence, when choosing $n > 1$, one must expect to classify a larger number of season peaks as high or very high intensity. When choosing $n = 30/m$ as suggested for the MEM, threholds will then tend to increase the more years of data are used to compute thresholds.
+This is a desirable property. Loosely speaking, if in addition the $Y_{1}^{(j)}$ come from a normal distribution, the nominal exceedance probabilities for the different thresholds would on average be achieved. If a different value $n > 1$ is chosen, this will generally no longer be the case. Equations \eqref{eq:expectation_mu}--\eqref{eq:expectation_q} tell us by how much $q_\alpha$ can be expected to differ from the intended value $f^{-1}(\mu_1 + z_\alpha \sigma_1)$. By the definition of the $\mu_i$ (with $\mu_i$ the expectation of the $i$-th largest observation in a given season), $\mathbb{E}(\mean)$ decreases in $n$. In most (possibly all) settings this also translates to the $q_\alpha$. As a consequence, when choosing $n > 1$, one must expect to classify a larger number of season peaks as high or very high intensity. When choosing $n = 30/m$ as suggested for the MEM, threholds will then tend to increase the more years of data are used to compute thresholds.
 
 \section{Simulaton study}
 \label{sec:simulation}
@@ -220,7 +222,7 @@ All analyses were performed using the R language for statistical computing, vers
 
 Results from our bootstrap simulation study for the four considered countries are shown in Figures \ref{fig:results1} (France, Spain) and \ref{fig:results2} (Switzerland and US). In the first and third colum of each figure we also show the analytical approximations from Section \ref{sec:analytical} as small black dots. To compute these approximations, we just plugged the empirical mean vectors and covariance matrices into equations \eqref{eq:expectation_mu} -- \eqref{eq:expectation_q}. As can be seen, the agreement with the bootstrap results is very good.
 
-In all four countries, the thresholds obtained when using a log transformation as in the MEM are considerably higher than when no transformation is used. Especially in France and Spain, thresholds obtained without the log transormation are clearly too low, as can be seen from the large proportion of seasons classified as very high intensity (around 10\% when using $n = 1$). Applying the log transformation mitigates this to some degree. 
+In all four countries, the thresholds obtained when using a log transformation as in the MEM are considerably higher than when no transformation is used. Especially in France and Spain, thresholds obtained without the log transformation are clearly too low, as can be seen from the large proportion of seasons classified as very high intensity (around 10\% when using $n = 1$). Applying the log transformation mitigates this to some degree. 
 
 As expected, when letting the number of observations used per season depend on the number of available seasons via $n = 30/m$, average thresholds increase in $m$. As a particularly striking example, the average threshold for high intensity for France when using a log transformation increase from %$q_{0.9} = 834, q_{0.975} = 1158$ for $m = 5, n = 6$ to $q_{0.9} = 1011, q_{0.975} = 1363$ for $m = 10, n = 3$ and $q_{0.9} = 1080, q_{0.975} = 1458$ for $m = 15, n = 2$. For $n = 1$, in which case the estimators can be interpreted as unbiased (Section \ref{sec:analytical}), we obtain averages of $q_{0.9} = 1147, q_{0.975} = 1559$.
 834 for $m = 5, n = 6$ to 1011 for $m = 10, n = 3$ and 1080 for $m = 15, n = 2$. For $n = 1$, in which case the estimators can be interpreted as unbiased (Section \ref{sec:analytical}), we obtain an average of 1147. This corresponds to an increase of roughly 35\% relative to the thresholds obtained with $n = 6$. Including historical observations which are not from actual peak weeks thus leads to a considerable lowering of alarm thresholds and will necessarily increase the number of alerts for high and very high influenza activity. As an example, in Spain, applying the MEM with log transformation and $M = 5, n = 6$ leads to 25\% of all seasons exceeding the high threshold and 11\% exceeding the very high threshold. This is obviously rather far from the intended excedance probabilities of 10\% and 2.5\% for the two thresholds.
