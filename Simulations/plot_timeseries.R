@@ -1,4 +1,4 @@
-setwd("/home/johannes/Documents/Ideas/mem/Simulations")
+library(here)
 
 dat_ch <- read.csv("../Data/for_mem/ili_mem_ch.csv")
 dat_es <- read.csv("../Data/for_mem/ili_mem_es.csv")
@@ -49,7 +49,7 @@ bplot_ranks(dat_es)
 plot_mem_ts(dat_ch, xlim = c(2000.5, 2015.5)); legend("topleft", legend = " Switzerland", bty = "n", cex = 1.2)
 bplot_ranks(dat_ch)
 
-plot_mem_ts(dat_us, xlim = c(1998.5, 2017.5), ylab = "wILI %"); legend("topleft", legend = " United States", bty = "n", cex = 1.2)
+plot_mem_ts(dat_us, xlim = c(1998.5, 2017.5), ylab = "wILI"); legend("topleft", legend = " United States", bty = "n", cex = 1.2)
 bplot_ranks(dat_us)
 dev.off()
 
