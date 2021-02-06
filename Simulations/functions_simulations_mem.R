@@ -71,23 +71,55 @@ plot_sim_summary <- function(sim_summary, ylim = NULL, show_bands = TRUE, ...){
 }
 
 # plotting function for exceedance proportions
-plot_exceedane_summary <- function(summary_exceedance, ...){
+# old version:
+# plot_exceedance_summary <- function(summary_exceedance, ...){
+#   summary_exceedance$averages
+#   range_i.seasons <- as.numeric(gsub("i.seasons_", "", rownames(summary_exceedance$averages), 1))
+#   plot(NULL, xlim = range(range_i.seasons), ylim = 0:1, ...)
+#   polygon(c(range_i.seasons, rev(range_i.seasons)),
+#           rep(0:1, each = length(range_i.seasons)), col = "red", border = NA)
+#   polygon(c(range_i.seasons, rev(range_i.seasons)),
+#           1 - c(summary_exceedance$averages[, "very_high_0.975"], rep(1, nrow(summary_exceedance$averages))),
+#           col = "darkorange", border = NA)
+#   polygon(c(range_i.seasons, rev(range_i.seasons)),
+#           1 - c(summary_exceedance$averages[, "high_0.9"], rep(1, nrow(summary_exceedance$averages))),
+#           col = "darkgoldenrod1", border = NA)
+#   polygon(c(range_i.seasons, rev(range_i.seasons)),
+#           1 - c(summary_exceedance$averages[, "medium_0.4"], rep(1, nrow(summary_exceedance$averages))),
+#           col = "chartreuse4", border = NA)
+# 
+#   abline(h = c(0.4, 0.9, 0.975), lty = 3)
+#   abline(v = 0.5 + (0:16), col = "white", lwd = 3)
+# }
+
+plot_exceedance_summary <- function(summary_exceedance, ...){
   summary_exceedance$averages
   range_i.seasons <- as.numeric(gsub("i.seasons_", "", rownames(summary_exceedance$averages), 1))
-  plot(NULL, xlim = range(range_i.seasons), ylim = 0:1, ...)
-  polygon(c(range_i.seasons, rev(range_i.seasons)),
-          rep(0:1, each = length(range_i.seasons)), col = "red", border = NA)
-  polygon(c(range_i.seasons, rev(range_i.seasons)),
-          1 - c(summary_exceedance$averages[, "very_high_0.975"], rep(1, nrow(summary_exceedance$averages))),
+  x <- rep(range_i.seasons, each = 2) + c(-0.5, 0.5)
+  
+  plot(NULL, xlim = range(range_i.seasons) + c(-0.5, 0.5), ylim = 0:1, ...)
+  # red:
+  polygon(c(x, rev(x)),
+          rep(0:1, each = length(x)), col = "red", border = NA)
+  # orange:
+  y_orange <- rep(1 - c(summary_exceedance$averages[, "very_high_0.975"], rep(1, nrow(summary_exceedance$averages))), each = 2)
+  polygon(c(x, rev(x)),
+          y_orange,
           col = "darkorange", border = NA)
-  polygon(c(range_i.seasons, rev(range_i.seasons)),
-          1 - c(summary_exceedance$averages[, "high_0.9"], rep(1, nrow(summary_exceedance$averages))),
+  # yellow:
+  y_yellow <- rep(1 - c(summary_exceedance$averages[, "high_0.9"], rep(1, nrow(summary_exceedance$averages))), each = 2)
+  polygon(c(x, rev(x)),
+          y_yellow,
           col = "darkgoldenrod1", border = NA)
-  polygon(c(range_i.seasons, rev(range_i.seasons)),
-          1 - c(summary_exceedance$averages[, "medium_0.4"], rep(1, nrow(summary_exceedance$averages))),
+  # green:
+  y_green <- rep(1 - c(summary_exceedance$averages[, "medium_0.4"], rep(1, nrow(summary_exceedance$averages))), each = 2)
+  polygon(c(x, rev(x)),
+          y_green,
           col = "chartreuse4", border = NA)
-
+  
+  abline(v = 0.5 + (0:16), col = "white", lwd = 4)
   abline(h = c(0.4, 0.9, 0.975), lty = 3)
+  box()
 }
 
 legend_summary <- function(){
