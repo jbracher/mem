@@ -240,3 +240,51 @@ legend_summary() # legend defined in separate function
 
 dev.off()
 
+# Additional plot for France using CIs:
+
+# load additional French results using confidence intervals:
+load(paste0("Results/results_ci_fr.rda"))
+load(paste0("Results/results1_ci_fr.rda"))
+load(paste0("Results/results_ci_nolog_fr.rda"))
+load(paste0("Results/results1_ci_nolog_fr.rda"))
+
+
+# France:
+summary_thresholds_ci_fr <- sim_summary(thresholds_ci_fr_0.4, thresholds_ci_fr_0.9, thresholds_ci_fr_0.975,
+                                     range_i.seasons, interval = interv)
+summary_exceedance_ci_fr <- sim_summary(exceedance_ci_fr_0.4, exceedance_ci_fr_0.9, exceedance_ci_fr_0.975,
+                                     range_i.seasons, interval = interv)
+summary_thresholds1_ci_fr <- sim_summary(thresholds1_ci_fr_0.4, thresholds1_ci_fr_0.9, thresholds1_ci_fr_0.975,
+                                      range_i.seasons, interval = interv)
+summary_exceedance1_ci_fr <- sim_summary(exceedance1_ci_fr_0.4, exceedance1_ci_fr_0.9, exceedance1_ci_fr_0.975,
+                                      range_i.seasons, interval = interv)
+summary_thresholds_ci_nolog_fr <- sim_summary(thresholds_ci_nolog_fr_0.4, thresholds_ci_nolog_fr_0.9, thresholds_ci_nolog_fr_0.975,
+                                           range_i.seasons, interval = interv)
+summary_exceedance_ci_nolog_fr <- sim_summary(exceedance_ci_nolog_fr_0.4, exceedance_ci_nolog_fr_0.9, exceedance_ci_nolog_fr_0.975,
+                                           range_i.seasons, interval = interv)
+summary_thresholds1_ci_nolog_fr <- sim_summary(thresholds1_ci_nolog_fr_0.4, thresholds1_ci_nolog_fr_0.9, thresholds1_ci_nolog_fr_0.975,
+                                            range_i.seasons, interval = interv)
+summary_exceedance1_ci_nolog_fr <- sim_summary(exceedance1_ci_nolog_fr_0.4, exceedance1_ci_nolog_fr_0.9, exceedance1_ci_nolog_fr_0.975,
+                                            range_i.seasons, interval = interv)
+
+
+pdf("../Draft/figure/plot_results_ci.pdf", width = 9, height = 5.5)
+par(mfrow = c(2, 4), mar = c(4, 4, 3, 1), las = 1)
+
+plot_sim_summary(summary_thresholds_ci_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
+plot_exceedance_summary(summary_exceedance_ci_fr, xlab = "# included seasons m", ylab = "average share")
+mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
+
+plot_sim_summary(summary_thresholds_ci_nolog_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
+mtext("France, using confidence intervals", 3, at = 1, line = 1.2, cex = 1)
+plot_exceedance_summary(summary_exceedance_ci_nolog_fr, xlab = "# included seasons m", ylab = "average share")
+mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
+
+plot_sim_summary(summary_thresholds1_ci_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
+plot_exceedance_summary(summary_exceedance1_ci_fr, xlab = "# included seasons m", ylab = "average share")
+mtext("log-transformed, n = 1", 3, at = 0, line = lin, cex = ce)
+
+plot_sim_summary(summary_thresholds1_ci_nolog_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
+plot_exceedance_summary(summary_exceedance1_ci_nolog_fr, xlab = "# included seasons m", ylab = "average share")
+mtext("natural scale, n = 1", 3, at = 0, line = lin, cex = ce)
+dev.off()
