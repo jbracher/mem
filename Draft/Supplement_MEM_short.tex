@@ -1,0 +1,254 @@
+\documentclass{article}
+\usepackage[left=2.5cm,right=2.5cm, top = 2.5cm, bottom = 3cm]{geometry}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{hyperref}
+\usepackage{todonotes}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+\newcommand{\sd}{s}
+\newcommand{\mean}{\bar{Y}}
+
+
+\begin{document}
+% \SweaveOpts{concordance=TRUE}
+
+\title{Supplementary Materials for ``An empirical assessment of influenza intensity thresholds obtained from the moving epidemic and WHO methods''}
+\author{Johannes Bracher, Jonas Littek}
+\date{ \small
+Karlsruhe Institute of Technology (KIT), Chair of Statistics and Econometrics}
+
+\maketitle
+
+\section{Formal statistical analysis}
+
+\subsection{Re-stating the definitions}
+\label{sec:definitions}
+
+We start by re-stating the definition of the MEM and WHO method form Section \textbf{XXX} of the main manuscript in a slighty more formal way and introducing relevant notation. We assume again that thresholds are based on influenza intensity data from $m$ past seasons and applied to the ($m + 1$)-th season. Thresholds for a given intensity measure $X$ are then obtained via the following steps.
+
+\begin{enumerate}
+\item Within each historical season $j = 1, \dots, m$ order all observations in decreasing order, denoting the $i$-th largest observation from season $j$ by $x^{(j)}_i$.
+\item Select the $n$ largest observations from each of the $m$ past seasons to construct a reference set $\mathcal{X} = \{x_i^{(j)}: j = 1, \dots, m; i = 1, \dots, n\}$.
+\item Apply an (invertible) transformation $y_i^{(j)} = f(x_i^{(j)})$ to all members of the reference set $\mathcal{X}$ to obtain a reference set $\mathcal{Y}$ of transformed historical observations.
+\item Assume that the transformed values in $\mathcal{Y}$ come from a normal distribution and compute estimates $\bar{y}, \sd$ of its mean and standard deviation.
+\item Define intensity thresholds on the transformed scale as quantiles of the normal distribution N$(\bar{y}, \sd^2)$, i.e.\ compute
+\begin{equation}
+q_{Y, \alpha} = \bar{y} + z_\alpha \sd, \label{eq:def_q}
+\end{equation}
+where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution. A common choice for both methods is
+\begin{itemize}
+\item the 40th percentile $q_{Y, 0.4} = \mean - 0.25 \sd$ as the threshold between low and medium intensity;
+\item the 90th percentile $q_{Y, 0.9} = \mean + 1.28 \sd$ as the threshold between medium and high intensity;
+\item the 97.5th percentile $q_{Y, 0.975} = \mean + 1.96\sd$ as the threshold between high and very high intensity.
+\end{itemize}
+\item Obtain thresholds on the original scale by applying the inverse transformation, i.e. setting $q_{0.4} = f^{-1}(q_{Y, 0.4})$, $q_{0.9} = f^{-1}(q_{Y, 0.9})$, $q_{0.975} = f^{-1}(q_{Y, 0.975})$.
+\end{enumerate}
+
+\noindent The MEM and WHO methods are special cases of this procedure with the following specifications:
+\begin{itemize}
+\item In the WHO method, $n = 1$ observation per season is used irrespective of the number $m$ of historical seasons. The standard procedure is to apply no transformation (i.e.\ $f$ is set to the identity function).
+\item In the MEM method, the default choice for $f$ is the natural logarithm, while the number of observations per season is set to $n = 30/m$. (The exact specification used in the \texttt{R} package \texttt{mem} is $n = \max(1, \lfloor 30/m \rceil)$, where $\lfloor \cdot \rceil$ denotes rounding to the nearest integer.) The total number of historical observations is thus kept approximately fixed, ensuring a reasonably large number of reference observations.
+\end{itemize}
+
+\subsection{Results}
+
+We start by considering how the expectations of the empirical mean $\bar{Y}$ and standard deviation $S$ entering into equation \eqref{eq:def_q} depend on $n$ (note that we now capitalize these as we consider the random variables rather than concrete observed values). Denote by $\mathbf{Y}^{(j)}$ the vector of the $n$ largest transformed incidences from season $j$ in decreasing order, i.e. $\mathbf{Y}^{(j)} = (Y^{(j)}_1, \dots, Y^{(j)}_n)^\top$ with $Y^{(j)}_1 \geq Y^{(j)}_2 \geq \dots \geq Y^{(j)}_n$. Now assume that $\mathbf{Y}^{(1)}, \dots, \mathbf{Y}^{(m)}$ are independent and identically distributed with mean and covariance matrix
+\begin{align}
+\mathbb{E}\left(\mathbf{Y}^{(j)}\right) = \boldsymbol{\mu} = \left(\begin{array}{c}
+\mu_1\\
+\vdots\\
+\mu_n
+\end{array}\right) \ \ \ \text{and} \ \ \ \text{Cov}\left(\mathbf{Y}^{(j)}\right) = \boldsymbol{\Sigma} =
+\left(\begin{array}{ccc}
+\sigma_{1, 1} & \cdots & \sigma_{1, n}\\
+\vdots & \ddots &\vdots\\
+\sigma_{n, 1} & \cdots & \sigma_{n, n}
+\end{array}\right),
+\end{align}
+respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. It can then be shown that the expectations of $\mean$ and $\sd^2$ when using $m$ seasons and $n$ observations from each season are given by
+\begin{align}
+\mathbb{E}(\mean) & = \frac{1}{n} \sum_{i = 1}^n \mu_i,
+\label{eq:expectation_mu}\\
+\mathbb{E}(\sd^2) & = \frac{m}{mn - 1} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{n(mn - 1)} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ - \ \frac{m}{n(mn - 1)}\left(\sum_{i = 1}^n \mu_i\right)^2,
+\label{eq:expectation_sigma2}
+\end{align}
+%\begin{align}
+%\mathbb{E}(\mean) & = \frac{1}{K} \sum_{i = 1}^K \mu_i,
+%\label{eq:expectation_mu}\\
+%\mathbb{E}(\sd^2) & = \frac{n}{nK - 1} \sum_{i = 1}^K (\sigma_{i}^2 + \mu_i^2) \ - \ \frac{1}{K(nK - 1)} \sum_{i = 1}^K \sum_{i' = 1}^K \sigma_{i,i'} \ - \ \frac{n}{K(nK - 1)}\left(\sum_{i = 1}^K \mu_i\right)^2,
+%\label{eq:expectation_sigma2}
+%\end{align}
+respectively. The derivation is provided in the next subsection. For reasons detailed there, if the transformation function $f$ is the identity or the natural logarithm,
+\begin{equation}
+\mathbb{E}(q_\alpha) \approx f^{-1}\left\{\mathbb{E}(\mean) + z_\alpha \sqrt{\mathbb{E}(\sd^2)}\right\}
+\label{eq:expectation_q}
+\end{equation}
+usually holds in good approximation in our applied setting (with $f^{-1}$ the idenity or exponential function). This implies that for $n = 1$, we have
+$$
+\mathbb{E}(q_\alpha) \approx f^{-1}(\mu_1 + z_\alpha \sigma_1).
+$$
+This is a desirable property. Loosely speaking, if in addition the $Y_{1}^{(j)}$ come from a normal distribution, the nominal exceedance probabilities for the different thresholds would be achieved on average. If a different value $n > 1$ is chosen, this will generally no longer be the case. Equations \eqref{eq:expectation_mu}--\eqref{eq:expectation_q} tell us by how much $q_\alpha$ can be expected to differ from the intended value $f^{-1}(\mu_1 + z_\alpha \sigma_1)$. By the definition of the $\mu_i$ (with $\mu_i$ the expectation of the $i$-th largest observation in a given season), $\mathbb{E}(\mean)$ decreases in $n$. In most (possibly all) settings this also translates to the $q_\alpha$. As a consequence, when choosing $n > 1$, one must expect to classify a larger number of season peaks as high or very high intensity. When choosing $n = 30/m$ as suggested for the MEM, threholds will then tend to increase the more years of data are used to compute thresholds.
+
+\subsection{Derivation}
+
+We assume that the different historical seasons are independent realizations of the same random process, which is certainly not strictly true, but should hold in good approximation. Then $\mathbf{Y}^{(1)}, \dots, \mathbf{Y}^{(m)}$ are independent and identically distributed with mean and covariance matrix
+\begin{align}
+\mathbb{E}(\mathbf{Y}^{(j)}) = \boldsymbol{\mu} = \left(\begin{array}{c}
+\mu_1\\
+\vdots\\
+\mu_n
+\end{array}\right) \ \ \ \text{and} \ \ \ \text{Cov}(\mathbf{Y}^{(j)}) = \boldsymbol{\Sigma} =
+\left(\begin{array}{ccc}
+\sigma_{1, 1} & \cdots & \sigma_{1, n}\\
+\vdots & \ddots &\vdots\\
+\sigma_{n, 1} & \cdots & \sigma_{n, n}
+\end{array}\right),
+\end{align}
+respectively, where to make notation more intuitive we also write $\sigma^2_i = \sigma_{i, i}$. We are interested in the expectations of the random variables $\mean$ and $\sd$, where
+\begin{align*}
+\mean & = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)}\\
+\sd & = \sqrt{\frac{1}{mn - 1} \sum_{j = 1}^m \sum_{i = 1}^n \left(Y_i^{(j)} - \mean\right)^2}.
+\end{align*}
+It is straightforward to see that 
+\begin{equation}
+\mathbb{E}(\mean) = \frac{1}{n} \sum_{i = 1}^n \mu_i.
+\label{eq:expectation_mu}
+\end{equation}
+Instead of the empirical standard deviation $\sd$ we first consider the variance $\sd^2$, which can also be written as
+\begin{align}
+\sd^2 & = \frac{mn}{mn - 1} \left\{\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \left(Y_i^{(j)} - \mean\right)^2 \right\}\\
+& = \frac{mn}{mn - 1} \left\{ \underbrace{\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)2}}_{= a} \ \ \ - \ \ \ \underbrace{\left(\frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right)^2}_{= b} \right\} \label{eq:sigma2hat}
+\end{align}
+%$$
+%\sd^2 = \underbrace{\left(\frac{1}{nK - 1} \sum_{j = 1}^n \sum_{i = 1}^K Y_i^{(j)2}\right)}_{ = a} \ \ \ - \ \ \ \underbrace{\left(\frac{1}{nK - 1} \sum_{j = 1}^n \sum_{i = 1}^K Y_i^{(j)} \right)^2}_{= b}.
+%$$
+We consider the two terms $a$ and $b$ separately, starting by
+\begin{align*}
+\mathbb{E}(a) & = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \mathbb{E}\left(Y_i^{(j)2}\right)\\
+& = \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n \left\{ \text{Var}\left(Y_i^{(j)}\right) + \mathbb{E}\left(Y_i^{(j)}\right)^2 \right\}\\
+& = \frac{m}{mn} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2).
+\end{align*}
+Then we note that
+\begin{align*}
+\mathbb{E}(b) & = \text{Var}\left( \frac{1}{mn} \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right) \ \ \ + \ \ \ \mathbb{E}\left(\frac{1}{mn}  \sum_{j = 1}^m \sum_{i = 1}^n Y_i^{(j)} \right)^2\\
+& = \frac{1}{(mn)^2}\sum_{j = 1}^m \text{Var}\left(\sum_{i = 1}^n Y_i^{(j)} \right) \ \ \ + \ \ \ \left(\frac{m}{mn} \sum_{i = 1}^n \mu_i\right)^2\\
+& = \frac{m}{(mn)^2} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ \ \ + \ \ \ \frac{m^2}{(mn)^2}\left(\sum_{i = 1}^n \mu_i\right)^2.
+\end{align*}
+Plugging this back into equation \eqref{eq:sigma2hat} we obtain
+\begin{equation}
+\mathbb{E}(\sd^2) = \frac{m}{mn - 1} \sum_{i = 1}^n (\sigma_{i}^2 + \mu_i^2) \ \ \ - \ \ \ \frac{1}{n(mn - 1)} \sum_{i = 1}^n \sum_{i' = 1}^n \sigma_{i,i'} \ \ \ - \ \ \ \frac{m}{n(mn - 1)}\left(\sum_{i = 1}^K \mu_i\right)^2.
+\label{eq:expectation_sigma2}
+\end{equation}
+It is straightforward to see that for $n = 1$ the expressions \eqref{eq:expectation_mu} and \eqref{eq:expectation_sigma2} simplify to
+$$
+\mathbb{E}(\mean^2) = \mu_1 \ \ \text{ and } \ \ \mathbb{E}(\sd^2) = \sigma^2_1.
+$$
+
+There is no general way of computing the expectation $\mathbb{E}(\sd)$, but unless the true distribution of  $\sd$ has strong excess curtosis,
+\begin{equation}
+\mathbb{E}(\sd) \approx \sqrt{\mathbb{E}(\sd^2)}
+\label{eq:expectation_sigma}
+\end{equation}
+is a reasonable approximation. We can then plug equations \eqref{eq:expectation_mu} and \eqref{eq:expectation_sigma} into the formulae for the thresholds $q_{Y, \alpha}$ (with $\alpha \in \{0.4, 0.9, 0.975\}$) on the transformed scale and obtain
+$$
+\mathbb{E}(q_{Y, \alpha}) \approx \mathbb{E}(\mean) + z_\alpha \sqrt{\mathbb{E}(\sd^2)},
+$$
+where $z_\alpha$ is the $\alpha$ quantile of the standard normal distribution.
+
+If $f$ was set to the natural logarithm, the question remains how to obtain statements concerning thresholds $q_\alpha$ on the original scale. Approximation via a second-order Taylor expansion yields
+\begin{equation}
+\mathbb{E}(q_\alpha) = \mathbb{E}\left\{\exp(q_{Y, \alpha})\right\} \approx \exp\left\{\mathbb{E}(q_{Y, \alpha})\right\} \times \left\{1 + \frac{\text{Var}(q_{Y, \alpha})}{2} \right\}.
+\label{eq:taylor}
+\end{equation}
+
+Empirically, after transformation to the log scale, the variance of season peak values is low (between 0.02 and 0.4 for the data sets analysed in Section 5 of the main manuscript). The resulting variances of $q_{Y, \alpha}$ are then quite small and do not play an important role in equation \eqref{eq:taylor}. We can thus use the even simpler approximation
+\begin{equation}
+\mathbb{E}(q_\alpha) \approx \exp\left\{\mathbb{E}(q_{Y, \alpha})\right\}.
+\end{equation}
+
+\newpage
+
+\section{Intensity thresholds based on confidence intervals}
+
+Previous works have referred to the thresholds discussed in our manuscript as upper ends of one-sided confidence intervals associated with the the arithmetic (WHO) or geometric mean (MEM) of the reference observations (\citealt{WHO2014, Vega2015}). This is an imprecise use of terminology as the thresholds are computed using the standard deviation $\sd$. Confidence intervals, on the other hand, would be computed using the standard error $\sd/\sqrt{nm}$. A more precise term would thus be ``prediction interval'', which implies that the interval refers to one future realization rather than a theoretical mean.
+
+These terminology questions aside, we note that the \texttt{mem} R package also offers threshold computation based on actual confidence intervals (\texttt{i.type.intensity = 1} for the geometric, \texttt{i.type.intensity = 2} for the arithmetic mean). On the transformed scale these are computed as
+\begin{equation}
+q_{Y, \alpha} = \bar{y} + z_\alpha \frac{\sd}{\sqrt{mn}}. \label{eq:q_ci}
+\end{equation}
+These thresholds show somewhat peculiar behaviour. We illustrate this by repeating the simulation study from Section \textbf{XXX} of the main manuscript for France with the respective settings. The result is shown in Figure \ref{fig:france_ci}.
+
+\begin{figure}[h!]
+\includegraphics[width=0.9\textwidth]{figure/plot_results_ci.pdf}
+\caption{Simulation results for France as in Figure \textbf{XX} of the main manuscript, but using confidence intervals based on standard errors rather than prediction intervals based on standard deviations.}
+\label{fig:france_ci}
+\end{figure}
+
+Here, two different mechanisms are at work. If one chooses $n = 1$ per season irrespective of the number $m$ of available seasons, the number of included observations $mn$ increases in $m$. With growing $m$ this leads to confidence intervals which get narrower and a funnel-like pattern in the different thresholds (bottom row of Figure \ref{fig:france_ci}. If one chooses $n = 30/m$, the number $mn$ will remain constant (or approximately, as some rounding is necessary). The funnel-like shape is thus not observed and an increasing pattern like in our main analyses emerges instead. In both cases, there is an excessive number of seasons classified as very high intensity. This reflects the fact that the extreme thresholds necessarily get smaller when using the standard error rather than standard deviation in equation \eqref{eq:q_ci}. We thus conclude that these variants of the moving epidemic method (corresponding to options \texttt{i.type.intensity = 1} and  \texttt{i.type.intensity = 2} in the R package \texttt{mem}) should not be applied in practice.
+
+\section{An overview of recent applications}
+\label{sec:recent_applications}
+
+To get a better understanding of the different settings in which the MEM and WHO methods are applied in practice we performed a literature search of articles published in English and citing the papers \cite{Vega2015}, \cite{WHO2014} and \cite{WHO2017} until December 2020 (identified via \textit{CrossRef} and \textit{Google Scholar}). The results are summarized in Table \ref{tab:literature}. As can be seen from the numerous entries from the years 2019 and 2020, the MEM has quickly become a standard approach in the determination of intensity thresholds for influenza and other respiratory diseases. Indeed, the contributions come from numerous countries and in many cases have been co-authored by representatives of national or regional public health agencies. In most analyses, the suggested threshold levels at the 40th, 90th and 97.5th percentile as described in Section \ref{sec:definitions} are used. Variability with respect to the number $m$ of historical seasons included is considerable, with a range from three to 16 seasons. Consequently, the number $n$ of observations included per season ranges from two to ten (none of the above papers indicated a modification of the default setting $n = 30/m$ of the moving epidemic method). We only found three published applications of the WHO method, one of them providing a comparison to the thresholds from the MEM method \citep{Rguig2020}.
+
+\begin{table}[h!]
+\caption{Applications of the MEM and WHO method to determine intensity thresholds for respiratory diseases. We do not include works where only baseline thresholds are computed. The number of seasons included to compute thresholds is denoted by $m$, the number of observations used per season by $n$. Abbreviations: SARI = severe acute respiratory infection; ILI = influenza-like illness; RSV = respiratory syncytial virus.}
+\label{tab:literature}
+\center
+\footnotesize
+\begin{tabular}{l l l l l l l}
+\multicolumn{7}{c}{(a) Moving epidemic method}\\ \\
+
+\toprule
+region & disease & years covered & $m$ & $n$ & percentiles & authors\\
+\midrule
+Australia & ILI/influenza & 2012--2017 & 5 & 6 & 40, 90, 99 & \cite{Vette2018}\\
+Australia, Chile, & ILI/SARI & 2013--2019 & 6 & 5 & 40, 90, 97.5 & \cite{Sullivan2019}\\
+New Zealand,\\
+South Africa\\
+Catalonia & ILI & 2010--2016 & 5 & 6 & ? & \cite{Basile2018}\\
+Catalonia & ILI & 2005--2018 & 12 & 3 & ? & \cite{Basile2019}\\
+Catalonia & ILI/influenza & 2010--2017 & 7 & 4 & ? & \cite{Torner2019}\\
+Egypt & SARI/ILI & 2010--2017 & 6 & 5 & 40, 90, 97.5 & \cite{AbdElGawad2020}\\
+Egypt & SARI & 2013--2015 & 3 & 10 & ? & \cite{Elhakim2019}\\
+England & ILI & 2010--2016 & 6 & 5 & ? & \cite{Wagner2018}\\
+Finland & influenza & 2011--2016 & 5 & 6 & ? & \cite{Pesaelae2019}\\
+Montenegro & ILI & 2010--2018 & 7 & 4 & 40, 90, 97.5 & \cite{Rakocevic2019}\\
+Morocco & ILI & 2005--2017 & 11 & 3 & 40, 90, 97.5 & \cite{Rguig2020}\\
+Netherlands & RSV & 2005--2017 & 12 & 3 & 40, 90, 97.5 & \cite{Vos2019}\\
+Norway & influenza & 2006--2015 & 9 & 3 & ? & \cite{Benedetti2019}\\
+Pakistan & ILI, SARI & 2008--2017 & 10 & 3 & 40, 90, 97.5 & \cite{Nisar2020}\\
+Portugal & ILI & 2012--2017 & 5 & 6 & 40, 90, 97.5 & \cite{Pascoa2018}\\
+Scotland & influenza & 2010--2018 & 7 & 4 & ? & \cite{Murray2018}\\
+Scotland & influenza & 2010--2019 & 7--8 & 4 & 40, 90, 97.5 & \cite{Dickson2020}\\
+Slovenia & RSV & 2008--2018 & 10 & 3 & 40, 90, 97.5 & \cite{Grilc2021}\\
+Spain (17 regions) & ILI & 2003--2015 & 4--10 & 3--8 & 40, 90, 97.5 & \cite{Bangert2017}\\
+Spain & ILI & 2001--2018 & 16 & 2 & 40, 90, 97.5 & \cite{RedondoBravo2020}\\
+Tunisia & ILI & 2009-2018 & 9 & 3 & 50, 90, 95 & \cite{Bouguerra2020}\\
+United Kingdom & ILI & 2000--2013 & 10 & 3 & 40, 90, 97.5 & \cite{Green2015}\\
+United Kingdom & ILI/RSV & 2011--2018 & 4--6 & 5--8 & 40, 90, 97.5 & \cite{Harcourt2019}\\
+USA & ILI/influenza & 2003--2015 & 11 & 3 & 50, 90, 98 & \cite{Biggerstaff2017}\\
+USA & ILI & 2010--2015 & 5 & 6 & 50, 90, 98 & \cite{Dahlgren2018}\\
+USA & influenza & 2010--2016 & 6 & 5 & 50, 90, 98 & \cite{Dahlgren2019}\\
+\bottomrule\\
+\multicolumn{7}{c}{(b) WHO method}\\ \\
+\toprule
+region & disease & years covered & $m$ & $n$ & percentiles & authors\\
+\midrule
+Cambodia & ILI & 2009--2015 & 7 & 1 & mean, 90, 95 & \cite{Ly2017}\\
+Morocco & ILI & 2005--2017 & 11 & 1 & 40, 90, 97.5 & \cite{Rguig2020}\\
+Philippines & ILI & 2006--2012 & 7 & 1 & 90 & \cite{Lucero2016}\\
+Victoria/Australia & ILI & 2002--2011 & 6--10 & 1 & 90, 95 & \cite{Tay2013}\\
+\end{tabular}
+\end{table}
+
+\newpage
+
+\bibliographystyle{apalike}
+\bibliography{bibliography_mem}
+
+
+\end{document}
