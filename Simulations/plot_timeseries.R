@@ -12,11 +12,11 @@ plot(dat_us[, 5])
 matr <- dat_ch
 xlim <- c(1990, 2020)
 
-plot_mem_ts <- function(matr, xlim, ylab = "inc / 100,000", ...){
+plot_mem_ts <- function(matr, xlim, ylab = "inc / 100,000", fact_ylim = 1.2, ...){
   years <- as.numeric(substr(colnames(matr), start = 13, stop = 16)) - 1
   labels_years <- gsub(".", "/", substr(colnames(matr), start = 8, stop = 16), fixed = TRUE)
   
-  plot(NULL, xlim = xlim, ylim = c(0, 1.2*max(matr)), xlab = "", ylab = ylab, axes = FALSE,...)
+  plot(NULL, xlim = xlim, ylim = c(0, fact_ylim*max(matr)), xlab = "", ylab = ylab, axes = FALSE,...)
   axis(1, at = years + 0.5, labels = labels_years)
   axis(2)
   box()
@@ -38,18 +38,23 @@ bplot_ranks <- function(matr, ylab = ""){
 }
 
 pdf("../Draft/figure/plot_data.pdf", width = 9, height = 5.5)
+
 par(las = 1, mar = c(3, 4, 0.5, 1))
 layout(matrix(1:8, ncol = 2, byrow = TRUE), widths = c(8, 2))
-plot_mem_ts(dat_fr, xlim = c(1985.5, 2019.5)); legend("topleft", legend = " France", bty = "n", cex = 1.2)
+plot_mem_ts(dat_fr, xlim = c(1985.5, 2019.5), fact_ylim = 1.1)
+legend("top", legend = " France  ", bty = "o", cex = 1.2, bg = "white")
 bplot_ranks(dat_fr)
 
-plot_mem_ts(dat_es, xlim = c(1998.5, 2019.5)); legend("topleft", legend = " Spain", bty = "n", cex = 1.2)
+plot_mem_ts(dat_es, xlim = c(1998.5, 2019.5))
+legend("top", legend = " Spain  ", bty = "o", cex = 1.2, bg = "white")
 bplot_ranks(dat_es)
 
-plot_mem_ts(dat_ch, xlim = c(2000.5, 2015.5)); legend("topleft", legend = " Switzerland", bty = "n", cex = 1.2)
+plot_mem_ts(dat_ch, xlim = c(2000.5, 2015.5), fact_ylim = 1.55);
+legend("top", legend = " Switzerland  ", bty = "o", cex = 1.2, bg = "white")
 bplot_ranks(dat_ch)
 
-plot_mem_ts(dat_us, xlim = c(1998.5, 2017.5), ylab = "wILI"); legend("topleft", legend = " United States", bty = "n", cex = 1.2)
+plot_mem_ts(dat_us, xlim = c(1998.5, 2017.5), ylab = "wILI", fact_ylim = 1.25)
+legend("top", legend = " United States  ", bty = "o", cex = 1.2, bg = "white")
 bplot_ranks(dat_us)
 dev.off()
 
