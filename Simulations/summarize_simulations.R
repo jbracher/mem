@@ -120,11 +120,6 @@ save(summary_thresholds_us, summary_thresholds1_us, summary_thresholds_nolog_us,
 
 load("Results/approx_expectations.rda")
 
-lines_approx_expectations <- function(approx_expectations, lty = 0, pch = 1, cex = 0.6){
-  lines(approx_expectations[, "n"], approx_expectations[, "medium_0.4"], type = "o", lty = lty, pch = pch, cex = cex)
-  lines(approx_expectations[, "n"], approx_expectations[, "high_0.9"], type = "o", lty = lty, pch = pch, cex = cex)
-  lines(approx_expectations[, "n"], approx_expectations[, "very_high_0.975"], type = "o", lty = lty, pch = pch, cex = cex)
-}
 
 pdf("../Draft/figure/plot_results.pdf", width = 9, height = 11)
 par(mfrow = c(4, 4), mar = c(4, 4, 3, 1), las = 1)
@@ -144,7 +139,7 @@ mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
 plot_sim_summary(summary_thresholds_nolog_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
 lines_approx_expectations(approx_expectations_nolog_fr)
-mtext("France", 3, at = -1, line = 1.2, cex = 1)
+mtext("France", 3, at = -1, line = 1.2, cex = 1, font = 2)
 plot_exceedance_summary(summary_exceedance_nolog_fr, xlab = "# included seasons m", ylab = "average share")
 mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
@@ -170,7 +165,7 @@ mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
 plot_sim_summary(summary_thresholds_nolog_es, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 1200))
 lines_approx_expectations(approx_expectations_nolog_es)
-mtext("Spain", 3, at = -1, line = 1.2, cex = 1)
+mtext("Spain", 3, at = -1, line = 1.2, cex = 1, font = 2)
 plot_exceedance_summary(summary_exceedance_nolog_es, xlab = "# included seasons m", ylab = "average share")
 mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
@@ -197,7 +192,7 @@ mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
 plot_sim_summary(summary_thresholds_nolog_ch, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 800))
 lines_approx_expectations(approx_expectations_nolog_ch)
-mtext("Switzerland", 3, at = -1, line = 1.2, cex = 1)
+mtext("Switzerland", 3, at = -1, line = 1.2, cex = 1, font = 2)
 plot_exceedance_summary(summary_exceedance_nolog_ch, xlab = "# included seasons m", ylab = "average share")
 mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
@@ -222,7 +217,7 @@ mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
 plot_sim_summary(summary_thresholds_nolog_us, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 0.12))
 lines_approx_expectations(approx_expectations_nolog_us)
-mtext("United States", 3, at = -1, line = 1.2, cex = 1)
+mtext("United States", 3, at = -1, line = 1.2, cex = 1, font = 2)
 plot_exceedance_summary(summary_exceedance_nolog_us, xlab = "# included seasons m", ylab = "average share")
 mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
@@ -276,7 +271,7 @@ plot_exceedance_summary(summary_exceedance_ci_fr, xlab = "# included seasons m",
 mtext("log-transformed, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 
 plot_sim_summary(summary_thresholds_ci_nolog_fr, xlab = "# included seasons m", ylab = "threshold", ylim = c(0, 2500))
-mtext("France, using confidence intervals", 3, at = 1, line = 1.2, cex = 1)
+mtext("France, using confidence intervals", 3, at = 1, line = 1.2, cex = 1, font = 2)
 plot_exceedance_summary(summary_exceedance_ci_nolog_fr, xlab = "# included seasons m", ylab = "average share")
 mtext("natural scale, n = 30 / m", 3, at = 0, line = lin, cex = ce)
 

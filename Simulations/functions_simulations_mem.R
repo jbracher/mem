@@ -122,6 +122,7 @@ plot_exceedance_summary <- function(summary_exceedance, ...){
   box()
 }
 
+# custon legend for plots
 legend_summary <- function(){
   plot(NULL, xlim = 0:1, ylim = 0:1, axes = FALSE, xlab = "", ylab = "")
   legend("top", legend = c("Intensity levels:", "very high", "high", "medium", "low", 
@@ -131,10 +132,21 @@ legend_summary <- function(){
                  NA, "black", "grey", "black", NA,
                  NA, "black", "red"),
          pch = c(NA, 15, 15, 15, 15, 
-                 NA, 15, 15, 1, NA,
+                 NA, 15, 15, 4, NA,
                  NA, NA, 15, NA), 
          lty = c(NA, NA, NA, NA, NA,
                  NA, 2, NA, NA, NA,
                  NA, 3, NA, NA),
+         pt.cex = c(1, 1, 1, 1, 1,
+                 1, 1, 1, 0.6, 1,
+                 1, 1, 2, 1),
          ncol = 3, bty = "n")
+}
+
+
+# adding analytical approximations
+lines_approx_expectations <- function(approx_expectations, lty = 0, pch = 4, cex = 0.6){
+  lines(approx_expectations[, "n"], approx_expectations[, "medium_0.4"], type = "o", lty = lty, pch = pch, cex = cex)
+  lines(approx_expectations[, "n"], approx_expectations[, "high_0.9"], type = "o", lty = lty, pch = pch, cex = cex)
+  lines(approx_expectations[, "n"], approx_expectations[, "very_high_0.975"], type = "o", lty = lty, pch = pch, cex = cex)
 }
