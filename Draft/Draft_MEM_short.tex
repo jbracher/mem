@@ -24,7 +24,7 @@
 
 \maketitle
 
-\abstract{The moving epidemic method (MEM) and the WHO method are widely used to determine intensity levels for seasonal influenza. The two approaches are conceptually similar, but differ in two aspects. Firstly, the MEM involves a log transformation of incidence data, while the WHO method operates on the original scale. Secondly, the MEM uses more than one observation from each past season to compute thresholds, fixing the total number to include. The WHO method uses only the highest value from each season. To assess the impact of these choices on thresholds and exceedance proportions we perform simulation studies which are based on re-sampling of ILI data from France, Spain, Switzerland and the US. When no transformation is applied, a large proportion of season peaks are classified as high or very high intensity. This can be mitigated by a logarithmic transformation. When fixing the total number of included past observations, thresholds increase the more seasons are available. When only few are available, there is a high chance of classifying a new season peak as high or very high intensity. We therefore suggest using one observation per season and a log transformation, i.e.\ a hybrid of the default settings of the MEM and WHO methods.}
+\abstract{The moving epidemic method (MEM) and the WHO method are widely used to determine intensity levels for seasonal influenza. The two approaches are conceptually similar, but differ in two aspects. Firstly, the MEM involves a log transformation of incidence data, while the WHO method operates on the original scale. Secondly, the MEM uses more than one observation from each past season to compute thresholds, fixing the total number to include. The WHO method uses only the highest value from each season. To assess the impact of these choices on thresholds and exceedance proportions we perform simulation studies which are based on re-sampling of ILI data from France, Spain, Switzerland and the US. When no transformation is applied, a rather large proportion of season peaks are classified as high or very high intensity. This can be mitigated by a logarithmic transformation. When fixing the total number of included past observations, thresholds increase the more seasons are available. When only few are available, there is a high chance of classifying a new season peak as high or very high intensity. We therefore suggest using one observation per season and a log transformation, i.e.\ a hybrid of the default settings of the MEM and WHO methods.}
 
 % \medskip
 
@@ -33,7 +33,7 @@
 \section{Introduction}
 
 Following the 2009 influenza H1N1 pandemic, the need for a rapid assessment tool for influenza intensity was recognized. The \textit{Review Committee on the Functioning of the
-International Health Regulations and on Pandemic Influenza (H1N1)} recommended that member states perform yearly updates and evaluations of intensity thresholds \citep[p.118]{WHO2011}. In the subsequent \textit{WHO Pandemic Infuenza Severity Assessment (PISA)} guideline \citep{WHO2017} the so-called WHO method \citep{WHO2014} and the moving epidemic method (MEM; \citealt{Vega2013, Vega2015}) were recommended to this end. The latter, which is also employed by the European Centre for Disease Prevention and Control (e.g., \citealt{ECDC2017}), has been adopted by numerous national public health agencies (e.g., \citealt{Dahlgren2019}, \citealt{Rakocevic2019}, \citealt{RedondoBravo2020}, \citealt{Vos2019}); see Supplement C for an overview of recent applications. The statistical properties of the MEM and WHO methods, however, have not yet been studied in detail. We here address this aspect via simulation experiments based on re-sampling of historical influenza data. Our results indicate that it may be beneficial to use a hybrid of the default settings of these two methods.% These are complement with some analytical statistical results.
+International Health Regulations and on Pandemic Influenza (H1N1)} recommended that member states perform yearly updates and evaluations of intensity thresholds \citep[p.118]{WHO2011}. In the subsequent \textit{WHO Pandemic Influenza Severity Assessment} (PISA) guideline \citep{WHO2017} the so-called WHO method \citep{WHO2014} and the moving epidemic method (MEM; \citealt{Vega2013, Vega2015}) were recommended to this end. The latter, which is also employed by the European Centre for Disease Prevention and Control (e.g., \citealt{ECDC2017}), has been adopted by numerous national public health agencies (e.g., \citealt{Dahlgren2019}, \citealt{Rakocevic2019}, \citealt{RedondoBravo2020}, \citealt{Vos2019}); see Supplement C for an overview of recent applications. The statistical properties of the MEM and WHO methods, however, have not yet been studied in detail. We here address this aspect via simulation experiments based on re-sampling of historical influenza data. Our results indicate that it may be beneficial to use a hybrid of the default settings of these two methods.% These are complement with some analytical statistical results.
 
 % The article is structured as follows. Section \ref{sec:definitions} provides concise definitions of the MEM and WHO methods, highlighting two differences between these conceptually similar approaches. Section \ref{sec:recent_applications} consists of an overview of published applications of the MEM and WHO methods. This is followed by a brief examination of statistical properties of the two methods in Section \ref{sec:analytical}. In Section \ref{sec:simulation} we describe our simulation approach and the results based on historical data from France, Spain, Switzerland and the United States. Section \ref{sec:discussion} concludes with a discussion.
 
@@ -52,7 +52,7 @@ We describe the computation of influenza/influenza-like illness (ILI) intensity 
 \item the 90th percentile $\mean + 1.28 \sd$ as the threshold between medium and high intensity;
 \item the 97.5th percentile $\mean + 1.96\sd$ as the threshold between high and very high intensity.
 \end{itemize}
-\item Transform thresholds back to the original scale (e.g. using the exponential function if a log trnsformation was used).
+\item Transform thresholds back to the original scale (e.g. using the exponential function if a log transformation was used).
 \end{enumerate}
 
 \noindent The MEM and WHO methods are special cases of this procedure:
@@ -60,14 +60,14 @@ We describe the computation of influenza/influenza-like illness (ILI) intensity 
 \item In the WHO method, $n = 1$ observation per season is used and by default no transformation is applied. If peak incidences vary strongly across seasons, a log transformation is recommended \citep{WHO2017}. 
 \item In the MEM method, the default transformation is the natural logarithm, while the number of included observations per season is set to $n = 30/m$, rounded to the nearest integer. The total number of historical observations is thus kept approximately fixed.
 \end{itemize}
-The rationale behind the percentile-based approach is that ``about 50--60\% of the season peaks should be above the moderate threshold, $\pm 10\%$ above the high threshold and $\pm 2.5\%$ above the extraordinary threshold'' \citep{WHO2017}.
+The rationale behind the percentile-based approach is that ``about 50--60\% of the season peaks should be above the moderate threshold, $\pm 10\%$ above the high threshold and $\pm 2.5\%$ above the extraordinary threshold'' \citep[p.10]{WHO2017}.
 
 The implementation of the moving epidemic method in the R package \texttt{mem} \citep{Lozano2020} permits the user to choose $n$, $m$, and $f$ (\texttt{i.type.intensity	= 5} for no transformation, \texttt{i.type.intensity = 6} for the log transformation). The term \textit{moving epidemic method} could thus also be used as an umbrella term for the general procedure described above. We here use it in a more narrow sense for the specification from \cite{Vega2015}, reflected in the default settings of the \texttt{mem} package.
 
-In previous works (\citealt{WHO2014, Vega2015}), the above thresholds have been described as upper ends of one-sided confidence intervals for the the arithmetic (WHO method) or geometric mean (MEM) of the reference observations. This, however, is imprecise terminology as in the computations the standard deviation $\sd$ rather than the standard error $\sd/\sqrt{nm}$ is used (see documentation of the \texttt{mem} package and \citealt{WHO2014}, p. 69). We note that the use of actual confidence intervals is also possible in the \texttt{mem} package (\texttt{i.type.intensity = 1} for the geometric, \texttt{i.type.intensity = 2} for the arithmetic mean). However, thresholds for all levels will then converge to the arithmetic or geometric mean if sufficient historical data are available. As illustrated in Supplement B, this is not a desirable behaviour.
+In previous works (\citealt{WHO2014, Vega2015}), the above thresholds have been described as upper ends of one-sided confidence intervals for the the arithmetic (WHO method) or geometric mean (MEM) of the reference observations. This, however, is imprecise terminology as in the computations the standard deviation $\sd$ rather than the standard error $\sd/\sqrt{nm}$ is used (see documentation of the \texttt{mem} package and \citealt{WHO2014}, p.69). We note that the use of actual confidence intervals is also possible in the \texttt{mem} package (\texttt{i.type.intensity = 1} for the geometric, \texttt{i.type.intensity = 2} for the arithmetic mean). However, thresholds for all levels will then converge to the arithmetic or geometric mean if sufficient historical data are available. As illustrated in Supplement B, this is not a desirable behaviour.
  
 
-\section{Simulaton study}
+\section{Simulation study}
 \label{sec:simulation}
 
 \subsection{Goal}
@@ -76,7 +76,7 @@ We aim to assess how thresholds depend on the employed transformation, the numbe
 
 \begin{itemize}
 \item The application of a logarithmic transformation is expected to lead to higher thresholds for the extreme categories and thus a lower proportion of seasons peaks classified as high or very high.
-\item In the MEM, the reference set also contains past obervations which are not actually peak observations. This may introduce a downward bias in thresholds, especially if due to a small number $m$ of available seasons $n$ is large.
+\item In the MEM, the reference set also contains past observations which are not actually peak observations. This may introduce a downward bias in thresholds, especially if due to a small number $m$ of available seasons $n$ is large.
 \end{itemize}
 The latter aspect is intuitive, but also supported by formal statistical considerations detailed in Supplement A. These imply that thresholds are unbiased for $n = 1$ in the sense that, as intended, they will be exceeded by around 40\%/90\%/97.5\% of the season peaks in the long run. When $n > 1$, thresholds will tend to be lower and exceeded more frequently.
 
@@ -90,7 +90,7 @@ We compare four versions of the general approach described in Section \ref{sec:d
 \item[(c)] Logarithmic transformation, $n = 1$.
 \item[(d)] Logarithmic transformation, $n = 30/m$. This corresponds to the MEM approach.
 \end{enumerate}
-In order to closely mimic the seasonal patterns of influenza, we re-sample historical surveillance data rather than generating fully synthetic data. Assume we have $M$ years of historical data on a measure of influenza activity. We then repeat the following steps 500 times:
+In order to closely mimic the seasonal patterns of influenza, we re-sample historical surveillance data rather than generating fully synthetic data. Assume the historical data contain $M$ seasons of historical data on a measure of influenza activity. We then repeat the following steps 500 times:
 
 \begin{itemize}
 \item Sample a sequence of 15 seasons from the $M$ available seasons. This is done with equal probability for each season and \textit{with replacement}, meaning that the same season can appear more than once. This approach is called the \textit{seasonal block bootstrap} \citep{Politis2001}.
@@ -101,7 +101,7 @@ In order to closely mimic the seasonal patterns of influenza, we re-sample histo
 \item Compute which fraction of all $M$ available historical season peaks would be classified as low, moderate, high and very high.
 \end{itemize}
 \end{itemize}
-The range $m =5, \dots, 15$ is motivated by the range of values found in real-world applications, see our overview in Supplement C. All analyses were performed using the R language for statistical computing \citep{RCT2020} and the package \texttt{mem} \citep{Lozano2020}.
+The range $m =5, \dots, 15$ is motivated by the range of values found in real-world applications, see overview in Supplement C. All analyses were performed using the R language for statistical computing \citep{RCT2020} and the package \texttt{mem} \citep{Lozano2020}.
 
 \subsection{Data}
 
@@ -119,19 +119,19 @@ We use publicly available influenza surveillance data from four countries. Data 
 
 \subsection{Results}
 
-Results from our simulation study are shown in Figures \ref{fig:results1} (France, Spain) and \ref{fig:results2} (Switzerland and US). In the first and third colum of each figure we also show an analytical approximation of the expected thresholds, see Supplement A for details. In all four countries, using a log transformation leads to increased thresholds, in particular for the high and very high levels. Especially in France and Spain, thresholds obtained without the log transformation are too low, as can be seen from the large proportion of season peaks classified as very high (around 10\% when using $n = 1$). As expected, when letting the number of observations used per season depend on the number of available seasons via $n = 30/m$, average thresholds increase in $m$. As a particularly striking example, the  average threshold for high intensity in France (when using a log transformation) increases from 834 for $m = 5, n = 6$ to 1011 for $m = 10, n = 3$ and 1080 for $m = 15, n = 2$. For $n = 1$, in which case thresholds can be interpreted as unbiased (Supplement A), the average is 1147. Including historical observations which are not from actual peak weeks thus leads to a considerable lowering of alarm thresholds and will increase the number of alerts for high and very high influenza activity. This is not surprising given the pronounced differences between the distribution of season peak values and e.g. fifth largest observation per season, see right column of Figure \ref{fig:data}. In the US and France, on average one in three season peaks is classified as high and one in seven as very high intensity when applying the MEM with log transformation and $m = 5, n = 6$. This is rather far from the intended excedance probabilities of 10\% and 2.5\%.
+Results from our simulation study are shown in Figures \ref{fig:results1} (France, Spain) and \ref{fig:results2} (Switzerland and US). In the first and third column of each figure we also show an analytical approximation of the expected thresholds, which agrees very well with the simulation results; see Supplement A for details. In all four countries, using a log transformation leads to increased thresholds, in particular for the high and very high levels. Especially in France and Spain, thresholds obtained without the log transformation are too low, as can be seen from the large proportion of season peaks classified as very high (around 10\% when using $n = 1$). As expected, when letting the number of observations used per season depend on the number of available seasons via $n = 30/m$, average thresholds increase in $m$. As a particularly striking example, the  average threshold for high intensity in France (when using a log transformation) increases from 834 for $m = 5, n = 6$ to 1011 for $m = 10, n = 3$ and 1080 for $m = 15, n = 2$. For $n = 1$, in which case thresholds can be interpreted as unbiased (Supplement A), the average is 1147. Including historical observations which are not from actual peak weeks thus leads to a considerable lowering of alarm thresholds and will increase the number of alerts for high and very high influenza activity. This is not surprising given the pronounced differences between the distribution of season peak values and e.g. fifth largest observation per season, see right column of Figure \ref{fig:data}. In the US and France, on average one in three season peaks is classified as high and one in seven as very high intensity when applying the MEM with log transformation and $m = 5, n = 6$. This is rather far from the intended exceedance probabilities of 10\% and 2.5\%.
 
 \begin{figure}
 \centering
 \includegraphics[page=1, width=0.95\textwidth]{figure/plot_results.pdf}
-\caption{Results of re-sampling simulation study, France and Spain. First and third column: mean intensity thresholds along with bands delimited by the empirical 5\% and 95\% quantiles. Analytical approximations of the mean threshold values are marked as small black dots. Second and fourth columns: resulting average shares of seasons classified as low, medium, high and very high intensity.}
+\caption{Results of simulation study, France and Spain. First and third column: mean intensity thresholds along with bands delimited by the empirical 5\% and 95\% quantiles. Analytical approximations of the mean threshold values are marked as small black crosses. Second and fourth columns: resulting average shares of seasons classified as low, medium, high and very high intensity.}
 \label{fig:results1}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[page=2, width=0.95\textwidth]{figure/plot_results.pdf}
-\caption{Results of re-sampling simulation study, Switzerland and United States. First and third column: mean intensity thresholds along with bands delimited by the empirical 5\% and 95\% quantiles. Analytical approximations of the mean threshold values are marked as small black dots. Second and fourth columns: resulting average shares of seasons classified as low, medium, high and very high intensity.}
+\caption{Results of simulation study, Switzerland and United States. First and third column: mean intensity thresholds along with bands delimited by the empirical 5\% and 95\% quantiles. Analytical approximations of the mean threshold values are marked as small black crosses. Second and fourth columns: resulting average shares of seasons classified as low, medium, high and very high intensity.}
 \label{fig:results2}
 \end{figure}
 
@@ -153,25 +153,25 @@ When always using $n = 1$, the average thresholds and shares of the different ca
 \section{Discussion}
 \label{sec:discussion}
 
-We provided a statistical assessment of implementation choices in a widely used framework for the computation of influenza intensity thresholds. We found that applying a log transformation led to better behaved thresholds and closer to nominal exceedance rates. Concerning the question of how many observations per historical season should be included to computate thresholds, we found that the common choice $n = 30/m$ results in too low thresholds when few historical seasons are available. We therefore recommend adopting $n = 1$ irrespective of the number of available historical seasons. This is possible in the available \texttt{R} package \texttt{mem} by setting \texttt{i.n.max = 1} when the function \texttt{memmodel} is called.
+We provided a statistical assessment of implementation choices in a widely used framework for the computation of influenza intensity thresholds. We found that applying a log transformation led to better behaved thresholds and closer to nominal exceedance rates. Concerning the question of how many observations per historical season should be included to compute thresholds, we found that the common choice $n = 30/m$ results in too low thresholds when few historical seasons are available. We therefore recommend adopting $n = 1$ irrespective of the number of available historical seasons. This is possible in the \texttt{R} package \texttt{mem} by setting \texttt{i.n.max = 1} when the function \texttt{memmodel} is called.
 
 % We focused on the computation of influenza intensity thresholds, but the same general arguments apply to the computation of thresholds to determine the onset of a season \citep{Vega2012}. As variability among observations around the season onset may be lower than around the peak the problem may be less severe; we did not assess this empirically as not all our data sets fully covered the off-season.
 
-We think that a simple and interpretable tool with a well-documented and open source software implementation like \texttt{mem} is a valuable tool in practice. The use of a standard approach at the European level will improve comparability of results, facilitating the evaluation and refinement of the tool. With this work we hope to contribute a statistical perspective on this topic which complements public health practitioners' experience from applied analyses.
+We think that a simple and interpretable tool with a well-documented and open source software implementation like \texttt{mem} is a valuable tool in practice. The use of a standard approach at the European level will improve comparability of results, facilitating the evaluation and refinement of the tool. With this work we hope to contribute a statistical perspective on this topic, complementing public health practitioners' experience from applied analyses.
 
 
 \section*{Data and code}
 
-Materials to reproduce the presented results are available at \url{https://github.com/jbracher/mem}.
+Materials to reproduce the presented results are available at \textit{(URL removed for double-blind peer review)}. % \url{https://github.com/jbracher/mem}.
 
-\section*{Author contributions}
+% \section*{Author contributions}
 
-Study concept: JB; Data processing: JB and JL; Literature review: JB and JL; Statistical analysis / implementation: JB; Writing and editing: JB and JL.
+% Study concept: JB; Data processing: JB and JL; Literature review: JB and JL; Statistical analysis / implementation: JB; Writing and editing: JB and JL.
 
 
-\section*{Acknowledgements}
+% \section*{Acknowledgements}
 
-We would like to thank Laura Werlen for helpful feedback. Johannes Bracher was supported by the Helmholtz Foundation via the SIMCARD Information and Data Science Pilot Project.
+% We would like to thank Laura Werlen for helpful feedback. Johannes Bracher was supported by the Helmholtz Foundation via the SIMCARD Information and Data Science Pilot Project.
 
 \bibliographystyle{apalike}
 \bibliography{bibliography_mem}
